@@ -7,8 +7,8 @@ import {RefObject, useEffect, useState} from "react";
  * @returns [width, height] - The state of the SVG size
  */
 export const useResponsiveSVG = (svg: RefObject<SVGSVGElement>) => {
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
+  const [width, setWidth] = useState<number>(100);
+  const [height, setHeight] = useState<number>(100);
   
  
   useEffect(() => {
