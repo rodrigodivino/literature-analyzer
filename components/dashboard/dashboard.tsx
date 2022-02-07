@@ -20,13 +20,13 @@ const Dashboard: FunctionComponent<DashboardTypes.Props> = ({data}) => {
     <svg ref={svg} className={styles.svg}>
       <g transform={translate}>
         <g transform={`translate(0,0)`}>
-          <WidgetColumn width={columnWidth} height={innerHeight}/>
+          <WidgetColumn width={columnWidth} height={innerHeight} widget={null as any} widgetData={null as any}/>
         </g>
         <g transform={`translate(${columnWidth},0)`}>
-          <WidgetColumn width={columnWidth} height={innerHeight}/>
+          <WidgetColumn width={columnWidth} height={innerHeight} widget={null as any} widgetData={null as any}/>
         </g>
         <g transform={`translate(${columnWidth * 2},0)`}>
-          <WidgetColumn width={columnWidth} height={innerHeight}/>
+          <WidgetColumn width={columnWidth} height={innerHeight} widget={null as any} widgetData={null as any}/>
         </g>
       </g>
      
