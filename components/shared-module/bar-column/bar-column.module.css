@@ -7,7 +7,7 @@
 }
 
 .cellBar {
-    fill: steelblue
+    fill: steelblue;
 }
 
 
@@ -17,6 +17,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
+    padding-bottom: 2px;
 }
 
 .labelInner {
