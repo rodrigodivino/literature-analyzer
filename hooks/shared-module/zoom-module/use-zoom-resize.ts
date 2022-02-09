@@ -1,4 +1,13 @@
 import {useEffect} from "react";
+import {ZoomBehavior} from "d3";
+
+/**
+ * Resizes a zoom behavior
+ * @param zoomBehavior - The behavior to resize
+ * @param scaleExtent - The value of the zoomBehavior.scaleExtent()
+ * @param extent - The value of the zoomBehavior.extent()
+ * @param translateExtent - The value of the zoomBehavior.translateExtent()
+ */
 export const useZoomResize = (
     zoomBehavior: ZoomBehavior<SVGGraphicsElement, unknown> | undefined,
     scaleExtent: [number, number],
@@ -17,4 +26,4 @@ export const useZoomResize = (
   }, [zoomBehavior, extent, scaleExtent, translateExtent]);
 };
 
-import {ZoomBehavior} from "d3";
+
