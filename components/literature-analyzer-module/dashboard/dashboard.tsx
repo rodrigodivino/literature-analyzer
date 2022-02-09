@@ -1,9 +1,9 @@
 import {FunctionComponent, useRef} from "react";
 import styles from "./dashboard.module.css"
 import {DashboardTypes} from "./dashboard.types";
-import {useResponsiveSVG} from "../../../hooks/shared-module/use-responsive-svg";
+import {useResponsiveSVG} from "../../../hooks/shared-module/utils-module/use-responsive-svg";
 import {DashboardConst} from "./dashboard.const";
-import {getMarginConvention} from "../../../hooks/shared-module/get-margin-convention";
+import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {BarColumn} from "../../shared-module/bar-column/bar-column";
 import {BarColumnConst} from "../../shared-module/bar-column/bar-column.const";
 
