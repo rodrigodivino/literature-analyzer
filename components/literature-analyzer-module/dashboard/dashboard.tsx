@@ -3,8 +3,9 @@ import styles from "./dashboard.module.css"
 import {DashboardTypes} from "./dashboard.types";
 import {useResponsiveSVG} from "../../../hooks/shared-module/use-responsive-svg";
 import {DashboardConst} from "./dashboard.const";
-import {WidgetColumn} from "../../shared-module/widget-column/widget-column";
 import {getMarginConvention} from "../../../hooks/shared-module/get-margin-convention";
+import {BarColumn} from "../../shared-module/bar-column/bar-column";
+import {BarColumnConst} from "../../shared-module/bar-column/bar-column.const";
 
 
 
@@ -20,13 +21,13 @@ const Dashboard: FunctionComponent<DashboardTypes.Props> = ({data}) => {
     <svg ref={svg} className={styles.svg}>
       <g transform={translate}>
         <g transform={`translate(0,0)`}>
-          <WidgetColumn width={columnWidth} height={innerHeight} widget={null as any} widgetData={null as any}/>
+          <BarColumn width={columnWidth} height={innerHeight} color={'steelblue'} data={BarColumnConst.TEST_DATA}/>
         </g>
         <g transform={`translate(${columnWidth},0)`}>
-          <WidgetColumn width={columnWidth} height={innerHeight} widget={null as any} widgetData={null as any}/>
+          <BarColumn width={columnWidth} height={innerHeight} color={'firebrick'} data={BarColumnConst.TEST_DATA}/>
         </g>
         <g transform={`translate(${columnWidth * 2},0)`}>
-          <WidgetColumn width={columnWidth} height={innerHeight} widget={null as any} widgetData={null as any}/>
+          <BarColumn width={columnWidth} height={innerHeight} color={'mediumseagreen'} data={BarColumnConst.TEST_DATA}/>
         </g>
       </g>
      
