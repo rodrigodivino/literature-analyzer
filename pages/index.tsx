@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Dashboard from "../components/dashboard/dashboard";
+import Dashboard from "../components/literature-analyzer-module/dashboard/dashboard";
 import {toJSON} from '@orcid/bibtex-parse-js'
 
 

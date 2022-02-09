@@ -1,10 +1,10 @@
 import {FunctionComponent, useRef} from "react";
 import styles from "./dashboard.module.css"
 import {DashboardTypes} from "./dashboard.types";
-import {useResponsiveSVG} from "../../shared/hooks/use-responsive-svg";
+import {useResponsiveSVG} from "../../../hooks/shared-module/use-responsive-svg";
 import {DashboardConst} from "./dashboard.const";
-import {WidgetColumn} from "../../shared/widget-column/widget-column";
-import {getMarginConvention} from "../../shared/hooks/get-margin-convention";
+import {WidgetColumn} from "../../shared-module/widget-column/widget-column";
+import {getMarginConvention} from "../../../hooks/shared-module/get-margin-convention";
 
 
 

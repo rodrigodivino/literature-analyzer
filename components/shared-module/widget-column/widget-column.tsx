@@ -1,4 +1,4 @@
-import {getMarginConvention} from "../hooks/get-margin-convention";
+import {getMarginConvention} from "../../../hooks/shared-module/get-margin-convention";
 import {WidgetColumnConst} from "./widget-column.const";
 import {WidgetColumnTypes} from "./widget-column.types";
 
