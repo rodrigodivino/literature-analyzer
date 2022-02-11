@@ -7,6 +7,8 @@ import {ZoomBehavior} from "d3";
  * @param scaleExtent - The value of the zoomBehavior.scaleExtent()
  * @param extent - The value of the zoomBehavior.extent()
  * @param translateExtent - The value of the zoomBehavior.translateExtent()
+ *
+ * @returns A function to compute ZoomInfo from a transform
  */
 export const useZoomResize = (
     zoomBehavior: ZoomBehavior<SVGGraphicsElement, unknown> | undefined,

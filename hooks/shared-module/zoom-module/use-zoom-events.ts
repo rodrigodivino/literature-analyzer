@@ -1,5 +1,7 @@
 import {useCallback, useEffect, useRef} from "react";
-import {ZoomBehavior, ZoomTransform} from "d3";
+import {ZoomBehavior} from "d3";
+import {ZoomDetails} from "./zoom-details";
+import {getZoomDetails} from "./get-zoom-details";
 
 /**
  * Listen to zoom events and call callbacks
@@ -10,39 +12,51 @@ import {ZoomBehavior, ZoomTransform} from "d3";
  */
 export const useZoomEvents = (
     zoomBehavior: ZoomBehavior<SVGGraphicsElement, unknown> | undefined,
-    $onZoomEvent$?: ((zoomTransform: ZoomTransform) => void) | null,
-    $onZoomStartEvent$?: ((zoomTransform: ZoomTransform) => void) | null,
-    $onZoomEndEvent$?: ((zoomTransform: ZoomTransform) => void) | null,
-): (zoomEvent: boolean) => void => {
+    $onZoomEvent$?: ((zoomTransform: ZoomDetails) => void) | null,
+    $onZoomStartEvent$?: ((zoomTransform: ZoomDetails) => void) | null,
+    $onZoomEndEvent$?: ((zoomTransform: ZoomDetails) => void) | null
+): ((toggle: boolean) => void) => {
   const blockZoomEvent = useRef<boolean>(false);
   
   useEffect(() => {
-    if(!(zoomBehavior && $onZoomEvent$)) return;
+    if (!(zoomBehavior && $onZoomEvent$)) {
+      return;
+    }
     
     zoomBehavior.on('zoom.useZoomEvents', (event) => {
-      if(blockZoomEvent?.current) return;
-      $onZoomEvent$?.(event.transform)
-    })
-  }, [zoomBehavior, $onZoomEvent$, blockZoomEvent])
+      if (blockZoomEvent?.current) {
+        return;
+      }
+      $onZoomEvent$?.(getZoomDetails(zoomBehavior, event.transform));
+    });
+  }, [zoomBehavior, $onZoomEvent$, blockZoomEvent]);
   
   useEffect(() => {
-    if(!(zoomBehavior && $onZoomStartEvent$)) return;
+    if (!(zoomBehavior && $onZoomStartEvent$)) {
+      return;
+    }
     
     zoomBehavior.on('start.useZoomEvents', (event) => {
-      if(blockZoomEvent?.current) return;
-      $onZoomStartEvent$?.(event.transform)
-    })
-  }, [zoomBehavior, $onZoomStartEvent$, blockZoomEvent])
+      if (blockZoomEvent?.current) {
+        return;
+      }
+      $onZoomStartEvent$?.(getZoomDetails(zoomBehavior, event.transform));
+    });
+  }, [zoomBehavior, $onZoomStartEvent$, blockZoomEvent]);
   
   useEffect(() => {
-    if(!(zoomBehavior && $onZoomEndEvent$)) return;
+    if (!(zoomBehavior && $onZoomEndEvent$)) {
+      return;
+    }
     
     zoomBehavior.on('end.useZoomEvents', (event) => {
-      if(blockZoomEvent?.current) return;
-      $onZoomEndEvent$?.(event.transform)
-    })
-  }, [zoomBehavior, $onZoomEndEvent$, blockZoomEvent])
-
+      if (blockZoomEvent?.current) {
+        return;
+      }
+      $onZoomEndEvent$?.(getZoomDetails(zoomBehavior, event.transform));
+    });
+  }, [zoomBehavior, $onZoomEndEvent$, blockZoomEvent]);
+  
   return useCallback((toggle: boolean) => {
     blockZoomEvent.current = toggle;
   }, [])

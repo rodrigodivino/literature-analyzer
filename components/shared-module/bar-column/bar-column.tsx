@@ -6,7 +6,6 @@ import styles from './bar-column.module.css';
 import {max, scaleLinear} from "d3";
 import {useZoomBehavior} from "../../../hooks/shared-module/zoom-module/use-zoom-behavior";
 import {useZoomResize} from "../../../hooks/shared-module/zoom-module/use-zoom-resize";
-import {useZoomWheelAsPan} from "../../../hooks/shared-module/zoom-module/use-zoom-wheel-as-pan";
 import {useZoomEvents} from "../../../hooks/shared-module/zoom-module/use-zoom-events";
 import {useProgrammaticZoom} from "../../../hooks/shared-module/zoom-module/use-programmatic-zoom";
 
@@ -33,9 +32,10 @@ export const BarColumn: FunctionComponent<BarColumnTypes.Props> = (
     [0, 0],
     [innerWidth, BarColumnConst.CELL_HEIGHT * data.length]
   ];
+  
   useZoomResize(zoomBehavior, [1, 1], [[0, 0], [innerWidth, innerHeight]], translateExtent);
   
-  useZoomWheelAsPan(zoomBehavior, zoomElement.current);
+  // useZoomWheelAsPan(zoomBehavior, zoomElement.current);
   
   const blockZoomEvent = useZoomEvents(zoomBehavior, $onZoomEvent$);
   

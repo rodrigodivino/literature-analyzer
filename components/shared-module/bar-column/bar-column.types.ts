@@ -1,4 +1,5 @@
 import {ZoomTransform} from "d3";
+import {ZoomDetails} from "../../../hooks/shared-module/zoom-module/zoom-details";
 
 export namespace BarColumnTypes {
   export interface Props {
@@ -6,7 +7,7 @@ export namespace BarColumnTypes {
     height: number;
     data: BarColumnTypes.Datum[];
     color?: string;
-    $onZoomEvent$?: (t: ZoomTransform) => void;
+    $onZoomEvent$?: (t: ZoomDetails) => void;
     inputTransform?: ZoomTransform
   }
   
