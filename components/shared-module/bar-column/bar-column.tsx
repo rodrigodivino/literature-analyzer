@@ -47,7 +47,7 @@ export const BarColumn: FunctionComponent<BarColumnTypes.Props> = (
   
   return <g ref={zoomElementRef} transform={translate}>
     {data.map((d, i) => {
-      return <g shapeRendering={'crispEdges'} key={d.id}
+      return <g className={styles.container} key={d.id}
                 transform={`translate(0,${i * BarColumnConst.CELL_HEIGHT + innerTransform.y})`}>
         <rect className={styles.cellBackground} width={innerWidth} height={BarColumnConst.CELL_HEIGHT}/>
         <rect className={styles.cellBar} style={{fill: color}} width={scale(d.value)} y={BarColumnConst.LABEL_HEIGHT}

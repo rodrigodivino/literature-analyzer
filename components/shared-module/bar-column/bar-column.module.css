@@ -1,3 +1,7 @@
+.container {
+    shape-rendering: crispEdges;
+}
+
 .cellBackground {
     fill: none;
 }

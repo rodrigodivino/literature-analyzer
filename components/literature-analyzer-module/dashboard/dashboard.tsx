@@ -20,12 +20,13 @@ const Dashboard: FunctionComponent<DashboardTypes.Props> = ({data}) => {
   const [sharedTransform, setSharedTransform] = useState<ZoomTransform>(zoomIdentity);
   const [sharedZoomY, setSharedZoomY] = useState<[number, number]>([0, 0]);
   
-  const columnWidth = Math.max(DashboardConst.MIN_COLUMN_WIDTH, innerWidth / 3);
-  
   const handleSharedZoomEvent = useCallback((zoomInfo: ZoomDetails) => {
     setSharedTransform(zoomInfo.transform);
     setSharedZoomY(zoomInfo.y);
   }, []);
+  
+  const columnWidth = Math.max(DashboardConst.MIN_COLUMN_WIDTH, innerWidth / 3);
+  
   
   return <div className={styles.container}>
     <svg ref={svg} className={styles.svg}>
