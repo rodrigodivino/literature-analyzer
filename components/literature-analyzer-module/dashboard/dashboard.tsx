@@ -6,7 +6,7 @@ import {DashboardConst} from "./dashboard.const";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {BarColumn} from "../../shared-module/bar-column/bar-column";
 import {BarColumnConst} from "../../shared-module/bar-column/bar-column.const";
-import {zoomIdentity, zoomTransform, ZoomTransform} from "d3";
+import {zoomIdentity, ZoomTransform} from "d3";
 
 
 const Dashboard: FunctionComponent<DashboardTypes.Props> = ({data}) => {
@@ -19,7 +19,7 @@ const Dashboard: FunctionComponent<DashboardTypes.Props> = ({data}) => {
   
   const columnWidth = Math.max(DashboardConst.MIN_COLUMN_WIDTH, innerWidth / 3);
   
-  const handleSharedZoomEvent = useCallback((zoomTransform) => {
+  const handleSharedZoomEvent = useCallback((zoomTransform: ZoomTransform) => {
     setSharedTransform(zoomTransform);
   }, []);
   
