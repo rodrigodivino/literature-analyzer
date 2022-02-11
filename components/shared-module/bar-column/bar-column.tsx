@@ -8,6 +8,8 @@ import {useZoomBehavior} from "../../../hooks/shared-module/zoom-module/use-zoom
 import {useZoomResize} from "../../../hooks/shared-module/zoom-module/use-zoom-resize";
 import {useZoomEvents} from "../../../hooks/shared-module/zoom-module/use-zoom-events";
 import {useProgrammaticZoom} from "../../../hooks/shared-module/zoom-module/use-programmatic-zoom";
+import {useZoomWheelAsPan} from "../../../hooks/shared-module/zoom-module/use-zoom-wheel-as-pan";
+import {useZoomInitializationNudge} from "../../../hooks/shared-module/zoom-module/use-zoom-initialization-nudge";
 
 export const BarColumn: FunctionComponent<BarColumnTypes.Props> = (
     {
@@ -24,9 +26,9 @@ export const BarColumn: FunctionComponent<BarColumnTypes.Props> = (
       .domain([0, max(data, d => d.value) ?? 0])
       .range([0, innerWidth - BarColumnConst.VALUE_LABEL_WIDTH]);
   
-  const zoomElement = useRef<SVGGraphicsElement>(null);
+  const zoomElementRef = useRef<SVGGraphicsElement>(null);
   
-  const [zoomBehavior, innerTransform] = useZoomBehavior(zoomElement.current);
+  const [zoomBehavior, innerTransform] = useZoomBehavior(zoomElementRef.current);
   
   const translateExtent: [[number, number], [number, number]] = [
     [0, 0],
@@ -35,13 +37,15 @@ export const BarColumn: FunctionComponent<BarColumnTypes.Props> = (
   
   useZoomResize(zoomBehavior, [1, 1], [[0, 0], [innerWidth, innerHeight]], translateExtent);
   
-  // useZoomWheelAsPan(zoomBehavior, zoomElement.current);
+  useZoomWheelAsPan(zoomBehavior, zoomElementRef.current);
   
   const blockZoomEvent = useZoomEvents(zoomBehavior, $onZoomEvent$);
   
-  useProgrammaticZoom(zoomBehavior, inputTransform, zoomElement, blockZoomEvent);
+  useProgrammaticZoom(zoomBehavior, inputTransform, zoomElementRef, blockZoomEvent);
   
-  return <g ref={zoomElement} transform={translate}>
+  useZoomInitializationNudge(zoomBehavior, zoomElementRef);
+  
+  return <g ref={zoomElementRef} transform={translate}>
     {data.map((d, i) => {
       return <g shapeRendering={'crispEdges'} key={d.id}
                 transform={`translate(0,${i * BarColumnConst.CELL_HEIGHT + innerTransform.y})`}>
