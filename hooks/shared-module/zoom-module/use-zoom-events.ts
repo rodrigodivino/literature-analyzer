@@ -1,12 +1,18 @@
 import {useCallback, useEffect, useRef} from "react";
 import {ZoomBehavior, ZoomTransform} from "d3";
 
+/**
+ * Listen to zoom events and call callbacks
+ * @param zoomBehavior - The zoom behavior to listen to events
+ * @param $onZoomEvent$ - Callback for the zoom event
+ * @param $onZoomStartEvent$ - Callback for the start event
+ * @param $onZoomEndEvent$ - Callback for the end event
+ */
 export const useZoomEvents = (
     zoomBehavior: ZoomBehavior<SVGGraphicsElement, unknown> | undefined,
     $onZoomEvent$?: ((zoomTransform: ZoomTransform) => void) | null,
     $onZoomStartEvent$?: ((zoomTransform: ZoomTransform) => void) | null,
     $onZoomEndEvent$?: ((zoomTransform: ZoomTransform) => void) | null,
-
 ): (zoomEvent: boolean) => void => {
   const blockZoomEvent = useRef<boolean>(false);
   
