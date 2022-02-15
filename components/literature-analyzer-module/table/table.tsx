@@ -21,9 +21,12 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     setZoomDetails(newZoomDetails);
   }, []);
   
-  console.log("data", data);
-  
-  const tableLayout = getTableLayout(data, ['title', 'recent', 'survey', 'trend'], innerWidth / 4, 40);
+  const tableLayout = getTableLayout(
+      data,
+      [TableConst.COLUMNS.TITLE, TableConst.COLUMNS.RECENT, TableConst.COLUMNS.SURVEY, TableConst.COLUMNS.TREND],
+      innerWidth / 4,
+      TableConst.ROW_HEIGHT
+  );
   
   
   return <div className={styles.container}>
@@ -32,7 +35,11 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
         {
           tableLayout.map(cell => {
             return <g key={cell.key} transform={`translate(${cell.x},${cell.y})`}>
-              <LabelCell fontSize={14} label={cell.d.entryTags?.title} width={cell.width} height={cell.height}/>
+              {
+                cell.column === TableConst.COLUMNS.TITLE &&
+                <LabelCell fontSize={14} label={cell.d.entryTags?.title} width={cell.width}
+                           height={cell.height}/>
+              }
             </g>;
           })
         }

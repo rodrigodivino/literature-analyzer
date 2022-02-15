@@ -3,8 +3,8 @@
     height: 100%;
     padding: 2px;
     display: flex;
-    align-items: flex-start;
-    align-content: flex-start;
+    align-items: center;
+    align-content: center;
     justify-items: flex-start;
     justify-content: flex-start;
 }
@@ -12,6 +12,7 @@
 .text {
     color: #555551;
     margin: 0;
+    padding: 0 2px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;

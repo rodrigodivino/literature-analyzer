@@ -1,6 +1,6 @@
 export const getTableLayout = <Row>(
     data: Row[],
-    columns: string[],
+    columns: (string | number)[],
     cellWidth: number,
     cellHeight: number
 ): TableCellData<Row>[]  => {
@@ -8,8 +8,8 @@ export const getTableLayout = <Row>(
     return columns.map((column, j) => {
       return {
         key: `row:${i}column:${j}`,
-        x: i * cellWidth,
-        y: j * cellHeight,
+        y: i * cellHeight,
+        x: j * cellWidth,
         width: cellWidth,
         height: cellHeight,
         i,
@@ -25,7 +25,7 @@ export interface TableCellData<Row> {
   key: string,
   i: number,
   j: number,
-  column: string,
+  column: string | number,
   d: Row,
   x: number,
   y: number,
