@@ -1,8 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Dashboard from "../components/literature-analyzer-module/dashboard/dashboard";
 import {toJSON} from '@orcid/bibtex-parse-js'
+import Table from "../components/literature-analyzer-module/table/table";
 
 
 const Home: NextPage = () => {
@@ -16,7 +16,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Dashboard data={testBibTex}/>
+        <Table data={testBibTex}/>
       </main>
 
       <footer className={styles.footer}>
