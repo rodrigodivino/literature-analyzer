@@ -5,6 +5,8 @@ import {useResponsiveSVG} from "../../../hooks/shared-module/utils-module/use-re
 import {TableConst} from "./table.const";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {ZoomDetails} from "../../../hooks/shared-module/zoom-module/zoom-details";
+import {getTableLayout} from "../../../hooks/getTableLayout";
+import LabelCell from "../../shared-module/label-cell/label-cell";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
@@ -21,20 +23,20 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   
   console.log("data", data);
   
+  const tableLayout = getTableLayout(data, ['title', 'recent', 'survey', 'trend'], innerWidth / 4, 40);
+  
   
   return <div className={styles.container}>
     <svg ref={svg} className={styles.svg}>
       <g transform={translate}>
         {
-          data.map((d, i) => {
-            return <g key={d.citationKey} transform={`translate(0,${i * TableConst.ROW_HEIGHT})`}>
-            
+          tableLayout.map(cell => {
+            return <g key={cell.key} transform={`translate(${cell.x},${cell.y})`}>
+              <LabelCell fontSize={14} label={cell.d.entryTags?.title} width={cell.width} height={cell.height}/>
             </g>;
-            
           })
         }
       </g>
-    
     </svg>
   </div>;
 };

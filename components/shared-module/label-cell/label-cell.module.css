@@ -1,9 +1,18 @@
 .outer {
     width: 100%;
     height: 100%;
+    padding: 2px;
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    justify-items: flex-start;
+    justify-content: flex-start;
 }
 
-.inner {
+.text {
     color: #555551;
-
+    margin: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
 }
