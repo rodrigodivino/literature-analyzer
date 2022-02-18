@@ -6,6 +6,8 @@ import {TableConst} from "./table.const";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {ZoomDetails} from "../../../hooks/shared-module/zoom-module/zoom-details";
 import {getTableLayout} from "../../../hooks/getTableLayout";
+import DataRow from "../../shared-module/data-row/data-row";
+import {DataRowTypes} from "../../shared-module/data-row/data-row.types";
 import LabelCell from "../../shared-module/label-cell/label-cell";
 
 
@@ -33,13 +35,21 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     <svg ref={svg} className={styles.svg}>
       <g transform={translate}>
         {
-          tableLayout.map(cell => {
-            return <g key={cell.key} transform={`translate(${cell.x},${cell.y})`}>
-              {
-                cell.column === TableConst.COLUMNS.TITLE &&
-                <LabelCell fontSize={14} label={cell.d.entryTags?.title} width={cell.width}
-                           height={cell.height}/>
-              }
+          data.map((d, i) => {
+            const cells: DataRowTypes.Cell[] = [];
+            
+            cells.push({
+              component: LabelCell,
+              componentProps: {
+                label: d.entryTags?.title,
+                fontSize: 12
+              },
+              key: 'label'
+            })
+  
+            
+            return <g key={d.citationKey} transform={`translate(0,${TableConst.ROW_HEIGHT * i})`} className='table-row-translate'>
+              <DataRow width={innerWidth} height={TableConst.ROW_HEIGHT} cells={cells}/>
             </g>;
           })
         }
