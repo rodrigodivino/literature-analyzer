@@ -1,9 +1,9 @@
-export const getTableLayout = <Row>(
+export const getTableLayout = <Row, Columns>(
     data: Row[],
-    columns: (string | number)[],
+    columns: Columns[],
     cellWidth: number,
     cellHeight: number
-): TableCellData<Row>[]  => {
+): TableCellData<Row, Columns>[]  => {
   return data.flatMap((d, i) => {
     return columns.map((column, j) => {
       return {
@@ -21,11 +21,11 @@ export const getTableLayout = <Row>(
   })
 };
 
-export interface TableCellData<Row> {
+export interface TableCellData<Row, Columns> {
   key: string,
   i: number,
   j: number,
-  column: string | number,
+  column: Columns,
   d: Row,
   x: number,
   y: number,

@@ -6,8 +6,7 @@ import {TableConst} from "./table.const";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {ZoomDetails} from "../../../hooks/shared-module/zoom-module/zoom-details";
 import {getTableLayout} from "../../../hooks/getTableLayout";
-import DataRow from "../../shared-module/data-row/data-row";
-import {DataRowTypes} from "../../shared-module/data-row/data-row.types";
+import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import LabelCell from "../../shared-module/label-cell/label-cell";
 
 
@@ -23,9 +22,9 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     setZoomDetails(newZoomDetails);
   }, []);
   
-  const tableLayout = getTableLayout(
+  const tableLayout = getTableLayout<ParsedBibtex, TableTypes.ColumnType>(
       data,
-      [TableConst.COLUMNS.TITLE, TableConst.COLUMNS.RECENT, TableConst.COLUMNS.SURVEY, TableConst.COLUMNS.TREND],
+      TableConst.COLUMNS,
       innerWidth / 4,
       TableConst.ROW_HEIGHT
   );
@@ -35,22 +34,38 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     <svg ref={svg} className={styles.svg}>
       <g transform={translate}>
         {
-          data.map((d, i) => {
-            const cells: DataRowTypes.Cell[] = [];
-            
-            cells.push({
-              component: LabelCell,
-              componentProps: {
-                label: d.entryTags?.title,
-                fontSize: 12
-              },
-              key: 'label'
-            })
-  
-            
-            return <g key={d.citationKey} transform={`translate(0,${TableConst.ROW_HEIGHT * i})`} className='table-row-translate'>
-              <DataRow width={innerWidth} height={TableConst.ROW_HEIGHT} cells={cells}/>
+          tableLayout.map((cell, i) => {
+            return <g key={cell.key} className="table-cell" transform={`translate(${cell.x},${cell.y})`}>
+              {(() => {
+                switch (cell.column) {
+                  case TableTypes.ColumnType.TITLE:
+                    return <LabelCell
+                        width={cell.width}
+                        height={cell.height}
+                        label={cell.d.entryTags?.title ?? ''}
+                    />;
+                  case TableTypes.ColumnType.RECENT:
+                    return <LabelCell
+                        width={cell.width}
+                        height={cell.height}
+                        label={cell.d.entryTags?.title ?? ''}
+                    />;
+                  case TableTypes.ColumnType.SURVEY:
+                    return <LabelCell
+                        width={cell.width}
+                        height={cell.height}
+                        label={cell.d.entryTags?.title ?? ''}
+                    />;
+                  case TableTypes.ColumnType.TREND:
+                    return <LabelCell
+                        width={cell.width}
+                        height={cell.height}
+                        label={cell.d.entryTags?.title ?? ''}
+                    />;
+                }
+              })()}
             </g>;
+            
           })
         }
       </g>

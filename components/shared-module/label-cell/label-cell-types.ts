@@ -3,6 +3,6 @@ export namespace LabelCellTypes {
     width: number,
     height: number,
     label: string,
-    fontSize: number,
+    fontSize?: number,
   }
 }
