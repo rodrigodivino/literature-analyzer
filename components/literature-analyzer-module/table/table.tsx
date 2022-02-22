@@ -9,6 +9,8 @@ import {getTableLayout} from "../../../hooks/getTableLayout";
 import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import LabelCell from "../../shared-module/label-cell/label-cell";
 import BarCell from "../../shared-module/bar-cell/bar-cell";
+import TrendCell from "../../shared-module/trend-cell/trend-cell";
+import {TrendCellConst} from "../../shared-module/trend-cell/trend-cell.const";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
@@ -61,10 +63,13 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
                         color={'mediumseagreen'}
                     />;
                   case TableTypes.ColumnType.TREND:
-                    return <LabelCell
+                    return <TrendCell
                         width={cell.width}
                         height={cell.height}
-                        label={cell.d.entryTags?.title ?? ''}
+                        contextData={TrendCellConst.SAMPLE_DATA.contextData}
+                        highlightedData={TrendCellConst.SAMPLE_DATA.highlightedData}
+                        valueDomain={TrendCellConst.SAMPLE_DATA.valueDomain}
+                        timeDomain={TrendCellConst.SAMPLE_DATA.timeDomain}
                     />;
                 }
               })()}
