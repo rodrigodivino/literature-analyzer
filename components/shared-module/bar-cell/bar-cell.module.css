@@ -1,0 +1,26 @@
+.bar {
+    shape-rendering: crispEdges;
+    fill: steelblue;
+}
+
+.labelOuter {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+
+.labelInner {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    color: #444442;
+    width: calc(100%);
+    margin-left: 3px;
+    padding-top: 1px;
+}

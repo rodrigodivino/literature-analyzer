@@ -8,6 +8,7 @@ import {ZoomDetails} from "../../../hooks/shared-module/zoom-module/zoom-details
 import {getTableLayout} from "../../../hooks/getTableLayout";
 import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import LabelCell from "../../shared-module/label-cell/label-cell";
+import BarCell from "../../shared-module/bar-cell/bar-cell";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
@@ -45,16 +46,19 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
                         label={cell.d.entryTags?.title ?? ''}
                     />;
                   case TableTypes.ColumnType.RECENT:
-                    return <LabelCell
+                    return <BarCell
                         width={cell.width}
                         height={cell.height}
-                        label={cell.d.entryTags?.title ?? ''}
+                        value={3}
+                        max={6}
                     />;
                   case TableTypes.ColumnType.SURVEY:
-                    return <LabelCell
+                    return <BarCell
                         width={cell.width}
                         height={cell.height}
-                        label={cell.d.entryTags?.title ?? ''}
+                        value={3}
+                        max={6}
+                        color={'mediumseagreen'}
                     />;
                   case TableTypes.ColumnType.TREND:
                     return <LabelCell
