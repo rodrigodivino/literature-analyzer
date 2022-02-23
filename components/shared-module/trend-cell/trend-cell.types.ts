@@ -2,17 +2,15 @@ export namespace TrendCellTypes {
   export interface Props {
     width: number;
     height: number;
-    timeDomain: [TrendCellTypes.TimeUnit, TrendCellTypes.TimeUnit];
+    timeDomain: [number, number];
     valueDomain: [number, number];
     contextData: TrendCellTypes.TrendDatum[][];
     highlightedData: TrendCellTypes.TrendDatum[][];
   }
   
   export interface TrendDatum{
-    time: TimeUnit,
+    time: number,
     value: number,
     d: unknown
   }
-  
-  export type TimeUnit = string | number | Date;
 }
