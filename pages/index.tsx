@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import {toJSON} from '@orcid/bibtex-parse-js'
 import Table from "../components/literature-analyzer-module/table/table";
 import {getBibtexStats} from "../hooks/literature-analyzer-module/get-bibtex-stats";
+import {testBibTex} from "../private/testBibTex";
 
 
 const Home: NextPage = () => {

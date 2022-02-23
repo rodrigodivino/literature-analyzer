@@ -1,6 +1,6 @@
 import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import {getStopWordStatus} from "./get-stopword-status";
-import {ascending, descending, range} from "d3";
+import {descending, range} from "d3";
 
 export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
   const recentYearThreshold = new Date().getUTCFullYear() - 5;
@@ -36,7 +36,7 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
     return paperData.bodyOfText.flatMap((word, i) => {
       return range(0, 4).flatMap(n => {
         return {
-          keyword: paperData.bodyOfText.slice(i, i + 1 + n).join(' '),
+          keyword: paperData.bodyOfText.slice(i, i + 2 + n).join(' '),
           totalOccurrences: 0,
           occurrencesInRecent: 0,
           occurrencesInSurveys: 0,
