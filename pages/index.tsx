@@ -3,10 +3,15 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import {toJSON} from '@orcid/bibtex-parse-js'
 import Table from "../components/literature-analyzer-module/table/table";
+import {getBibtexStats} from "../hooks/literature-analyzer-module/get-bibtex-stats";
 
 
 const Home: NextPage = () => {
-  const testBibTex = toJSON('');
+  const testBibTex = toJSON('')
+  
+  const bibtexStats = getBibtexStats(testBibTex);
+  
+  console.log("bibtexStats", bibtexStats);
   
   return (
     <div className={styles.container}>
