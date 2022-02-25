@@ -1,9 +1,11 @@
 import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import {getStopWordStatus} from "./get-stopword-status";
-import {descending, range} from "d3";
+import {ascending, descending, extent, max, range} from "d3";
 
 export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
   const recentYearThreshold = new Date().getUTCFullYear() - 5;
+  
+  const [minYear, maxYear] = extent(bibtex, paperEntry => parseFloat(paperEntry.entryTags?.year ?? '')) as [number, number];
   
   const bibtexData = bibtex.filter(paperEntry => paperEntry?.entryTags?.author)
       .map(paperEntry => {
@@ -25,13 +27,14 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
   const allKeywordStats: KeywordStats[] = bibtexData.flatMap(paperData => {
     return paperData.titleWords.flatMap((word, i) => {
       return range(0, 5).flatMap(n => {
-        return {
+        const stat: KeywordStats = {
           keyword: paperData.titleWords.slice(i, i + 2 + n).join(' '),
           totalOccurrences: 0,
           occurrencesInRecent: 0,
           occurrencesInSurveys: 0,
-          occurrencesOverTime: []
+          occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0}))
         }
+        return stat;
       })
     })
   })
@@ -64,16 +67,20 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
         
         if(keywordYearRecord) {
           keywordYearRecord.occurrences += 1;
-        } else {
-          keyword.occurrencesOverTime.push({year: paperData.year, occurrences: 1})
         }
       }
     }
   }
   
+  
   const keywordStats = uniqueKeywordStats
       .filter(keywordRecord => keywordRecord.totalOccurrences > 1)
       .sort((a,b) => descending(a.totalOccurrences, b.totalOccurrences))
+  
+  keywordStats.forEach(keywordStat => {
+    keywordStat.occurrencesOverTime
+        .sort((a,b) => ascending(a.year, b.year))
+  })
   
   return {
     keywords: keywordStats

@@ -24,6 +24,7 @@ const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
       .x(d => timeScale(d.time))
       .y(d => valueScale(d.value))
   
+  
   return <g className="trend-cell" transform={translate}>
     <rect className={styles.background} width={innerWidth} height={innerHeight}/>
     {
