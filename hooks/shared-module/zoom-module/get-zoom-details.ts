@@ -1,5 +1,5 @@
 import {ZoomDetails} from "./zoom-details";
-import {ZoomBehavior, ZoomTransform} from "d3";
+import {ZoomBehavior, zoomIdentity, zoomTransform, ZoomTransform} from "d3";
 
 /**
  * Derives zoom details from a behavior and transform
@@ -9,9 +9,12 @@ import {ZoomBehavior, ZoomTransform} from "d3";
  * @returns the zoom details
  */
 export const getZoomDetails = (
-    zoomBehavior: ZoomBehavior<SVGGraphicsElement, unknown>,
-    transform: ZoomTransform
+    zoomBehavior: ZoomBehavior<SVGGraphicsElement, unknown> | undefined,
+    transform: ZoomTransform | undefined,
 ): ZoomDetails => {
+  if(!(zoomBehavior && transform)) {
+    return defaultZoomDetails
+  }
   const scaleExtent = zoomBehavior.scaleExtent();
   const translateExtent = zoomBehavior.translateExtent();
   // @ts-ignore no types for the zoomBehavior.extent() signature that has no arguments and returns the constant extent
@@ -35,4 +38,13 @@ export const getZoomDetails = (
     x: [xStart / worldWidth, xEnd / worldWidth],
     y: [yStart / worldHeight, yEnd / worldHeight]
   }
+}
+
+export const defaultZoomDetails :ZoomDetails = {
+  extent: [[0, 0], [0, 0]],
+  scaleExtent: [0, 1],
+  transform: zoomIdentity,
+  translateExtent: [[0, 0], [0, 0]],
+  x: [0,0],
+  y: [0,0]
 }

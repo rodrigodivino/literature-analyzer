@@ -1,4 +1,4 @@
-import {FunctionComponent, useCallback, useMemo, useRef, useState} from "react";
+import {FunctionComponent, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import styles from "./table.module.css";
 import {TableTypes} from "./table.types";
 import {useResponsiveSVG} from "../../../hooks/shared-module/utils-module/use-responsive-svg";
@@ -16,6 +16,8 @@ import {TrendCellTypes} from "../../shared-module/trend-cell/trend-cell.types";
 import {useZoomWheelAsPan} from "../../../hooks/shared-module/zoom-module/use-zoom-wheel-as-pan";
 import {useZoomResize} from "../../../hooks/shared-module/zoom-module/use-zoom-resize";
 import {useZoomInitializationNudge} from "../../../hooks/shared-module/zoom-module/use-zoom-initialization-nudge";
+import {defaultZoomDetails, getZoomDetails} from "../../../hooks/shared-module/zoom-module/get-zoom-details";
+import VerticalScroller from "../../shared-module/vertical-scroller/vertical-scroller";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
@@ -25,12 +27,6 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   const [width, height] = useResponsiveSVG(svg);
   
   const [innerWidth, innerHeight, translate] = getMarginConvention(width, height, TableConst.MARGIN);
-  
-  const [zoomDetails, setZoomDetails] = useState<ZoomDetails>();
-  
-  const handleZoomEvent = useCallback((newZoomDetails: ZoomDetails) => {
-    setZoomDetails(newZoomDetails);
-  }, []);
   
   const tableLayout = getTableLayout<KeywordStats, TableTypes.ColumnType>(
       data.keywords,
@@ -55,12 +51,19 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   }, [occurrencesOverTime]);
   
   const [zoomBehavior, zoomTransform] = useZoomBehavior(zoomElement.current);
+  const [zoomDetails, setZoomDetails] = useState<ZoomDetails>(defaultZoomDetails);
+  
   useZoomWheelAsPan(zoomBehavior, zoomElement.current);
   useZoomResize(zoomBehavior,
       [1, 1],
       [[0,0], [innerWidth, innerHeight]],
       [[0, 0], [innerWidth, TableConst.ROW_HEIGHT * data.keywords.length]])
   useZoomInitializationNudge(zoomBehavior, zoomElement)
+  
+  useEffect(() => {
+    setZoomDetails(getZoomDetails(zoomBehavior, zoomTransform));
+  }, [zoomBehavior, zoomTransform])
+  
   
   const trendCellData = useMemo(() => {
     return data.keywords.reduce((acc, keyword) => {
@@ -73,57 +76,69 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     return Object.values(trendCellData);
   }, [trendCellData]);
   
-  
   return <div className={styles.container}>
     <svg ref={svg} className={styles.svg}>
-      <g transform={translate}>
-        <g className="zoom-area" ref={zoomElement}>
-          <rect className={styles.zoomBackground} width={innerWidth} height={innerHeight}/>
-          {
-            tableLayout.map((cell, i) => {
-              return <g key={cell.key} className="table-cell"
-                        transform={`translate(${cell.x},${zoomTransform.y + cell.y})`}>
-                {(() => {
-                  switch (cell.column) {
-                    case TableTypes.ColumnType.TITLE:
-                      return <LabelCell
-                          width={cell.width}
-                          height={cell.height}
-                          label={cell.d.keyword}
-                      />;
-                    case TableTypes.ColumnType.RECENT:
-                      return <BarCell
-                          width={cell.width}
-                          height={cell.height}
-                          value={cell.d.occurrencesInRecent}
-                          max={maxOccurrenceInRecent}
-                      />;
-                    case TableTypes.ColumnType.SURVEY:
-                      return <BarCell
-                          width={cell.width}
-                          height={cell.height}
-                          value={cell.d.occurrencesInSurveys}
-                          max={maxOccurrenceInSurvey}
-                          color={'steelblue'}
-                      />;
-                    case TableTypes.ColumnType.TREND:
-                      return <TrendCell
-                          width={cell.width}
-                          height={cell.height}
-                          contextData={trendCellList}
-                          highlightedData={trendCellData[cell.d.keyword]}
-                          valueDomain={trendValueDomain}
-                          timeDomain={trendTimeDomain}
-                      />;
-                  }
-                })()}
-              </g>;
-              
-            })
-          }
+      <g transform={translate} >
+        <g clipPath={`url(#table-clip)`}>
+          <g className="zoom-area" ref={zoomElement}>
+            <rect className={styles.zoomBackground} width={innerWidth} height={innerHeight}/>
+            {
+              tableLayout.map((cell, i) => {
+                return <g key={cell.key} className="table-cell"
+                          transform={`translate(${cell.x},${zoomTransform.y + cell.y})`}>
+                  {(() => {
+                    switch (cell.column) {
+                      case TableTypes.ColumnType.TITLE:
+                        return <LabelCell
+                            width={cell.width}
+                            height={cell.height}
+                            label={cell.d.keyword}
+                        />;
+                      case TableTypes.ColumnType.RECENT:
+                        return <BarCell
+                            width={cell.width}
+                            height={cell.height}
+                            value={cell.d.occurrencesInRecent}
+                            max={maxOccurrenceInRecent}
+                        />;
+                      case TableTypes.ColumnType.SURVEY:
+                        return <BarCell
+                            width={cell.width}
+                            height={cell.height}
+                            value={cell.d.occurrencesInSurveys}
+                            max={maxOccurrenceInSurvey}
+                            color={'steelblue'}
+                        />;
+                      case TableTypes.ColumnType.TREND:
+                        return <TrendCell
+                            width={cell.width}
+                            height={cell.height}
+                            contextData={trendCellList}
+                            highlightedData={trendCellData[cell.d.keyword]}
+                            valueDomain={trendValueDomain}
+                            timeDomain={trendTimeDomain}
+                        />;
+                    }
+                  })()}
+                </g>;
+        
+              })
+            }
+          </g>
         </g>
-      
+        
+        <g transform={`translate(${innerWidth},0)`}>
+          <VerticalScroller width={20} height={innerHeight} position={zoomDetails.y}/>
+        </g>
       </g>
+  
+      
+     
+      <defs>
+        <clipPath id='table-clip'>
+          <rect width={innerWidth} height={innerHeight}/>
+        </clipPath>
+      </defs>
     </svg>
   </div>;
 };
