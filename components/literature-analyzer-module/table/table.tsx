@@ -18,6 +18,7 @@ import {useZoomResize} from "../../../hooks/shared-module/zoom-module/use-zoom-r
 import {useZoomInitializationNudge} from "../../../hooks/shared-module/zoom-module/use-zoom-initialization-nudge";
 import {defaultZoomDetails, getZoomDetails} from "../../../hooks/shared-module/zoom-module/get-zoom-details";
 import VerticalScroller from "../../shared-module/vertical-scroller/vertical-scroller";
+import {useProgrammaticZoom} from "../../../hooks/shared-module/zoom-module/use-programmatic-zoom";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
@@ -76,6 +77,11 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     return Object.values(trendCellData);
   }, [trendCellData]);
   
+  const handleNewScrollerPosition = useCallback((newScrollerPosition) => {
+    // TODO: Process scroller position into new zoom transform
+    console.log("newScrollerPosition", newScrollerPosition);
+    return;
+  }, [])
   return <div className={styles.container}>
     <svg ref={svg} className={styles.svg}>
       <g transform={translate} >
@@ -128,7 +134,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
         </g>
         
         <g transform={`translate(${innerWidth},0)`}>
-          <VerticalScroller width={20} height={innerHeight} position={zoomDetails.y}/>
+          <VerticalScroller $onNewPosition$={handleNewScrollerPosition} width={20} height={innerHeight} position={zoomDetails.y}/>
         </g>
       </g>
   

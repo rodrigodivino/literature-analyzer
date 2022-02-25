@@ -3,5 +3,7 @@ export namespace VerticalScrollerTypes {
     width: number;
     height: number;
     position: [number, number];
+    
+    $onNewPosition$: (newPosition: [number, number]) => void;
   }
 }
