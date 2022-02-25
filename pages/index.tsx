@@ -11,8 +11,6 @@ const Home: NextPage = () => {
   
   const bibtexStats = getBibtexStats(testBibTex);
   
-  console.log("bibtexStats", bibtexStats);
-  
   return (
     <div className={styles.container}>
       <Head>

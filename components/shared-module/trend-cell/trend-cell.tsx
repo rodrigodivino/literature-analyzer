@@ -1,4 +1,4 @@
-import {FunctionComponent} from "react";
+import {FunctionComponent, memo, useEffect} from "react";
 import {TrendCellTypes} from "./trend-cell.types";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {TrendCellConst} from "./trend-cell.const";
@@ -34,14 +34,10 @@ const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
         </g>
       })
     }
-    {
-      highlightedData.map((highlightedDatum, i) => {
-        return <g key={i}>
-          <path className={styles.highlightedLine} d={lineGen(highlightedDatum) ?? ''}/>
-        </g>
-      })
-    }
+    <g>
+      <path className={styles.highlightedLine} d={lineGen(highlightedData) ?? ''}/>
+    </g>
   </g>;
 };
 
-export default TrendCell;
+export default memo(TrendCell);

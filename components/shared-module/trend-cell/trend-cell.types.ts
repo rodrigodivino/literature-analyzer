@@ -5,7 +5,7 @@ export namespace TrendCellTypes {
     timeDomain: [number, number];
     valueDomain: [number, number];
     contextData: TrendCellTypes.TrendDatum[][];
-    highlightedData: TrendCellTypes.TrendDatum[][];
+    highlightedData: TrendCellTypes.TrendDatum[];
   }
   
   export interface TrendDatum{

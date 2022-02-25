@@ -13,3 +13,7 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+.zoomBackground {
+    opacity: 0
+}
