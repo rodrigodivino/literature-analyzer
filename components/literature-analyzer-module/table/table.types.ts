@@ -1,8 +1,8 @@
-import {ParsedBibtex} from "@orcid/bibtex-parse-js";
+import {BibTexStats} from "../../../hooks/literature-analyzer-module/get-bibtex-stats";
 
 export namespace TableTypes {
   export interface Props {
-    data: ParsedBibtex[];
+    data: BibTexStats;
   }
   
   export enum ColumnType {

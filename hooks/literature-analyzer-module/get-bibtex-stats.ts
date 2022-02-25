@@ -7,36 +7,26 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
   
   const bibtexData = bibtex.filter(paperEntry => paperEntry?.entryTags?.author)
       .map(paperEntry => {
-        const processedTitle =  ((paperEntry.entryTags?.title))
+        const titleWords =  ((paperEntry.entryTags?.title))
             .replace(/[\W_]+/g, " ")
             .split(' ')
             .filter(w => w)
             .map(w => w.toLowerCase())
             .filter(w => !getStopWordStatus(w))
-        
-        const processedAbstract = ((paperEntry.entryTags?.abstract ?? ''))
-            .replace(/[\W_]+/g, " ")
-            .split(' ')
-            .filter(w => w)
-            .map(w => w.toLowerCase())
-            .filter(w => !getStopWordStatus(w))
-        
-        const bodyOfText = [...processedTitle, ...processedAbstract]
             
         return {
           d: paperEntry,
-          processedTitle: processedTitle.join(' '),
-          processedAbstract: processedAbstract.join(' '),
+          titleWords,
+          processedTitle: titleWords.join(' '),
           year: parseFloat(paperEntry.entryTags?.year ?? ''),
-          bodyOfText
         }
       })
   
-  const allKeywords: KeywordStats[] = bibtexData.flatMap(paperData => {
-    return paperData.bodyOfText.flatMap((word, i) => {
+  const allKeywordStats: KeywordStats[] = bibtexData.flatMap(paperData => {
+    return paperData.titleWords.flatMap((word, i) => {
       return range(0, 4).flatMap(n => {
         return {
-          keyword: paperData.bodyOfText.slice(i, i + 2 + n).join(' '),
+          keyword: paperData.titleWords.slice(i, i + 2 + n).join(' '),
           totalOccurrences: 0,
           occurrencesInRecent: 0,
           occurrencesInSurveys: 0,
@@ -47,23 +37,19 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
   }).filter(k => k.keyword.length > 3 && k.keyword.split(' ').length > 1)
   
   
-  const rawKeywords = allKeywords.map(k => k.keyword)
+  const keywordArray = allKeywordStats.map(k => k.keyword)
   
-  console.log("rawKeywords", rawKeywords);
-  
-  const keywords = allKeywords.filter((k, i) => {
-    return rawKeywords.indexOf(k.keyword) === i;
+  const uniqueKeywordStats = allKeywordStats.filter((k, i) => {
+    return keywordArray.indexOf(k.keyword) === i;
   })
   
-  console.log("bibtexData", bibtexData);
   
-  
-  for(let keyword of keywords) {
+  for(let keyword of uniqueKeywordStats) {
     for (let paperData of bibtexData) {
       const paddedTitle = ' ' + paperData.processedTitle + ' ';
-      const paddedAbstract = ' ' +  paperData.processedAbstract + ' ';
+      const paddedKeyword = ' ' + keyword.keyword + ' ';
       
-      if(paddedTitle.includes(' ' + keyword.keyword + ' ') || paddedAbstract.includes(' ' + keyword.keyword  + ' ')) {
+      if(paddedTitle.includes(paddedKeyword)) {
         keyword.totalOccurrences += 1;
         
         if(paperData.year >= recentYearThreshold) {
@@ -85,12 +71,12 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
     }
   }
   
-  keywords.sort((a,b) => descending(a.totalOccurrences, b.totalOccurrences))
-  
-  console.log("keywords", keywords);
+  const keywordStats = uniqueKeywordStats
+      .filter(keywordRecord => keywordRecord.totalOccurrences > 1)
+      .sort((a,b) => descending(a.totalOccurrences, b.totalOccurrences))
   
   return {
-    keywords: []
+    keywords: keywordStats
   };
 };
 

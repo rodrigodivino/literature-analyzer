@@ -21,7 +21,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Table data={testBibTex}/>
+        <Table data={bibtexStats}/>
       </main>
 
       <footer className={styles.footer}>

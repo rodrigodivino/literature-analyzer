@@ -6,11 +6,12 @@ import {TableConst} from "./table.const";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {ZoomDetails} from "../../../hooks/shared-module/zoom-module/zoom-details";
 import {getTableLayout} from "../../../hooks/getTableLayout";
-import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import LabelCell from "../../shared-module/label-cell/label-cell";
 import BarCell from "../../shared-module/bar-cell/bar-cell";
 import TrendCell from "../../shared-module/trend-cell/trend-cell";
 import {TrendCellConst} from "../../shared-module/trend-cell/trend-cell.const";
+import {KeywordStats} from "../../../hooks/literature-analyzer-module/get-bibtex-stats";
+import {max} from "d3";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
@@ -25,13 +26,15 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     setZoomDetails(newZoomDetails);
   }, []);
   
-  const tableLayout = getTableLayout<ParsedBibtex, TableTypes.ColumnType>(
-      data,
+  const tableLayout = getTableLayout<KeywordStats, TableTypes.ColumnType>(
+      data.keywords,
       TableConst.COLUMNS,
       innerWidth / 4,
       TableConst.ROW_HEIGHT
   );
   
+  const maxOccurrenceInRecent = max(data.keywords, k => k.occurrencesInRecent)!;
+  const maxOccurrenceInSurvey = max(data.keywords, k => k.occurrencesInSurveys)!;
   
   return <div className={styles.container}>
     <svg ref={svg} className={styles.svg}>
@@ -45,21 +48,21 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
                     return <LabelCell
                         width={cell.width}
                         height={cell.height}
-                        label={cell.d.entryTags?.title ?? ''}
+                        label={cell.d.keyword}
                     />;
                   case TableTypes.ColumnType.RECENT:
                     return <BarCell
                         width={cell.width}
                         height={cell.height}
-                        value={3}
-                        max={6}
+                        value={cell.d.occurrencesInRecent}
+                        max={maxOccurrenceInRecent}
                     />;
                   case TableTypes.ColumnType.SURVEY:
                     return <BarCell
                         width={cell.width}
                         height={cell.height}
-                        value={3}
-                        max={6}
+                        value={cell.d.occurrencesInSurveys}
+                        max={maxOccurrenceInSurvey}
                         color={'mediumseagreen'}
                     />;
                   case TableTypes.ColumnType.TREND:
