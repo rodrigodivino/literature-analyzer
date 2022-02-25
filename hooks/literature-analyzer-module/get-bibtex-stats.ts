@@ -24,7 +24,7 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
   
   const allKeywordStats: KeywordStats[] = bibtexData.flatMap(paperData => {
     return paperData.titleWords.flatMap((word, i) => {
-      return range(0, 4).flatMap(n => {
+      return range(0, 5).flatMap(n => {
         return {
           keyword: paperData.titleWords.slice(i, i + 2 + n).join(' '),
           totalOccurrences: 0,
@@ -34,7 +34,7 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
         }
       })
     })
-  }).filter(k => k.keyword.length > 3 && k.keyword.split(' ').length > 1)
+  })
   
   
   const keywordArray = allKeywordStats.map(k => k.keyword)

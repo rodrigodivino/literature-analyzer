@@ -11,7 +11,7 @@ import BarCell from "../../shared-module/bar-cell/bar-cell";
 import TrendCell from "../../shared-module/trend-cell/trend-cell";
 import {TrendCellConst} from "../../shared-module/trend-cell/trend-cell.const";
 import {KeywordStats} from "../../../hooks/literature-analyzer-module/get-bibtex-stats";
-import {max} from "d3";
+import {extent, max, min} from "d3";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
@@ -35,6 +35,10 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   
   const maxOccurrenceInRecent = max(data.keywords, k => k.occurrencesInRecent)!;
   const maxOccurrenceInSurvey = max(data.keywords, k => k.occurrencesInSurveys)!;
+  
+  const occurrencesOverTime = data.keywords.flatMap(k => k.occurrencesOverTime);
+  const [minTrendTime, maxTrendTime] = extent(occurrencesOverTime, o => o.year) as [number, number];
+  const [minTrendValue, maxTrendValue] = extent(occurrencesOverTime, o => o.occurrences) as [number, number];
   
   return <div className={styles.container}>
     <svg ref={svg} className={styles.svg}>
@@ -63,16 +67,18 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
                         height={cell.height}
                         value={cell.d.occurrencesInSurveys}
                         max={maxOccurrenceInSurvey}
-                        color={'mediumseagreen'}
+                        color={'steelblue'}
                     />;
                   case TableTypes.ColumnType.TREND:
                     return <TrendCell
                         width={cell.width}
                         height={cell.height}
-                        contextData={TrendCellConst.SAMPLE_DATA.contextData}
-                        highlightedData={TrendCellConst.SAMPLE_DATA.highlightedData}
-                        valueDomain={TrendCellConst.SAMPLE_DATA.valueDomain}
-                        timeDomain={TrendCellConst.SAMPLE_DATA.timeDomain}
+                        contextData={data.keywords.filter(k => k.keyword !== cell.d.keyword).map(keyword => {
+                          return keyword.occurrencesOverTime.map(o => ({time: o.year, value: o.occurrences, d: o}));
+                        })}
+                        highlightedData={[cell.d.occurrencesOverTime.map(o => ({time: o.year, value: o.occurrences, d: o}))]}
+                        valueDomain={[minTrendValue, maxTrendValue]}
+                        timeDomain={[minTrendTime, maxTrendTime]}
                     />;
                 }
               })()}

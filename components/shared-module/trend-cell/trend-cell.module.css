@@ -1,6 +1,6 @@
 .contextLine {
     fill: none;
-    stroke: #AEAEAE;
+    stroke: #DEDEDE;
     stroke-width: 1px;
 }
 
@@ -8,7 +8,7 @@
 .highlightedLine {
     fill: none;
     stroke: steelblue;
-    stroke-width: 3px;
+    stroke-width: 1px;
 }
 
 .background {
