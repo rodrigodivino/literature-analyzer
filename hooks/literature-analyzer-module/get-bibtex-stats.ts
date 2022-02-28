@@ -97,4 +97,5 @@ export interface KeywordStats {
   occurrencesInRecent: number;
   occurrencesInSurveys: number;
   occurrencesOverTime: Array<{ year: number, occurrences: number }>;
+  
 }

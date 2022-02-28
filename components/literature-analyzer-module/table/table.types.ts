@@ -6,9 +6,11 @@ export namespace TableTypes {
   }
   
   export enum ColumnType {
-    TITLE,
-    RECENT,
-    SURVEY,
-    TREND
+    KEYWORD= 'KEYWORD',
+    RECENT = "RECENT",
+    SURVEY = "SURVEY",
+    TREND = "TREND"
   }
+  
+  
 }

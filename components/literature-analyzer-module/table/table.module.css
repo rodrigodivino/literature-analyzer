@@ -17,12 +17,24 @@
     background-color: #FAFAFA;
     border-bottom: 1px solid #DEDEDE;
     height: 35px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .table :is(td, th) {
     padding: 0;
     margin: 0;
     width: 25%;
+}
+
+.sortDescent {}
+.sortDescent::after {
+    content: ' ▼';
+}
+
+.sortAscent {}
+.sortAscent::after {
+  content: ' ▲';
 }
 
 .cellSVG {

@@ -1,13 +1,35 @@
-import {FunctionComponent, useMemo} from "react";
+import {FunctionComponent, MouseEventHandler, useMemo, useState} from "react";
 import styles from "./table.module.css";
 import {TableTypes} from "./table.types";
-import {extent, max} from "d3";
+import {ascending, descending, extent, max} from "d3";
 import {TrendCellTypes} from "../../shared-module/trend-cell/trend-cell.types";
 import SVGBarCell from "../../shared-module/bar-cell/svg-bar-cell";
 import SVGTrendCell from "../../shared-module/trend-cell/trend-cell-svg";
+import {MouseEvent} from 'React';
+import ColumnType = TableTypes.ColumnType;
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
+  const [sortedColumn, setSortedColumn] = useState<TableTypes.ColumnType>(ColumnType.RECENT);
+  const [descentSortMode, setDescentSortMode] = useState<boolean>(true);
+  
+  data.keywords.sort((a,b) => {
+    const sortingFunction = descentSortMode ? descending : ascending;
+    switch(sortedColumn) {
+      case TableTypes.ColumnType.KEYWORD:
+        return sortingFunction(b.keyword, a.keyword);
+      case TableTypes.ColumnType.RECENT:
+        return sortingFunction(a.occurrencesInRecent, b.occurrencesInRecent);
+      case TableTypes.ColumnType.SURVEY:
+        return sortingFunction(a.occurrencesInSurveys, b.occurrencesInSurveys);
+        // TODO: Quantify trend and sort by it
+      case TableTypes.ColumnType.TREND:
+        return sortingFunction(a.occurrencesInRecent, b.occurrencesInRecent);
+      default:
+        return sortingFunction(a.occurrencesInRecent, b.occurrencesInRecent);
+    }
+  })
+  
   const maxOccurrenceInRecent = max(data.keywords, k => k.occurrencesInRecent)!;
   const maxOccurrenceInSurvey = max(data.keywords, k => k.occurrencesInSurveys)!;
   
@@ -34,23 +56,44 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     return Object.values(trendCellData);
   }, [trendCellData]);
   
+  const handleHeaderClick: MouseEventHandler<HTMLTableRowElement> = (e: MouseEvent<HTMLTableRowElement>) => {
+    const column = (e.target as HTMLElement).id as TableTypes.ColumnType;
+    if(column === sortedColumn) {
+      setDescentSortMode(!descentSortMode);
+    } else {
+      setDescentSortMode(true);
+      setSortedColumn(column);
+    }
+  }
+  
+  const sortClass = descentSortMode ? styles.sortDescent : styles.sortAscent;
   return <div className={styles.container}>
-    
     <table className={styles.table}>
-      <tr>
-        <th>
+      <thead>
+      <tr onClick={handleHeaderClick}>
+        <th id={TableTypes.ColumnType.KEYWORD} className={
+          `${sortedColumn === TableTypes.ColumnType.KEYWORD ? sortClass : ''}`
+        }>
           Keyword
         </th>
-        <th>
+        <th id={TableTypes.ColumnType.RECENT} className={
+          `${sortedColumn === TableTypes.ColumnType.RECENT ? sortClass : ''}`
+        }>
           Recent Occurrences
         </th>
-        <th>
+        <th id={TableTypes.ColumnType.SURVEY} className={
+          `${sortedColumn === TableTypes.ColumnType.SURVEY ? sortClass : ''}`
+        }>
           Survey Occurrences
         </th>
-        <th>
+        <th id={TableTypes.ColumnType.TREND} className={
+          `${sortedColumn === TableTypes.ColumnType.TREND ? sortClass : ''}`
+        }>
           Trend
         </th>
       </tr>
+      </thead>
+      <tbody>
       {
         data.keywords.map(d => {
           return <tr key={d.keyword}>
@@ -61,7 +104,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
               <div className={styles.cellDIV}>
                 <SVGBarCell value={d.occurrencesInRecent} max={maxOccurrenceInRecent}/>
               </div>
-            
+      
             </td>
             <td>
               <div className={styles.cellDIV}>
@@ -79,6 +122,8 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
           </tr>;
         })
       }
+      </tbody>
+     
     
     </table>
     

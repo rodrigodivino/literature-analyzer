@@ -14,8 +14,6 @@ export const useResponsiveMural = (mural: RefObject<SVGSVGElement> | RefObject<H
   useEffect(() => {
     if(!mural.current) return;
     
-    console.log('here')
-  
     setWidth(mural.current.clientWidth);
     setHeight(mural.current.clientHeight);
     
