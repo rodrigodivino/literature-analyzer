@@ -32,7 +32,8 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
           totalOccurrences: 0,
           occurrencesInRecent: 0,
           occurrencesInSurveys: 0,
-          occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0}))
+          occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0})),
+          averageTrendStrength: 0
         }
         return stat;
       })
@@ -82,6 +83,15 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
         .sort((a,b) => ascending(a.year, b.year))
   })
   
+  keywordStats.forEach(keywordStat => {
+    let weight = 0;
+    for(let i = 1; i < keywordStat.occurrencesOverTime.length; i++) {
+      weight += i;
+      keywordStat.averageTrendStrength += i * (keywordStat.occurrencesOverTime[i].occurrences - keywordStat.occurrencesOverTime[i-1].occurrences);
+    }
+    keywordStat.averageTrendStrength /= weight;
+  })
+  
   return {
     keywords: keywordStats
   };
@@ -97,5 +107,5 @@ export interface KeywordStats {
   occurrencesInRecent: number;
   occurrencesInSurveys: number;
   occurrencesOverTime: Array<{ year: number, occurrences: number }>;
-  
+  averageTrendStrength: number;
 }
