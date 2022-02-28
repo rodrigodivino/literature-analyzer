@@ -23,6 +23,7 @@ const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
   const lineGen = line<TrendCellTypes.TrendDatum>()
       .x(d => timeScale(d.time))
       .y(d => valueScale(d.value))
+      .defined(d => d.value !== 0)
   
   
   return <g className="trend-cell" transform={translate}>
@@ -36,6 +37,11 @@ const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
     }
     <g>
       <path className={styles.highlightedLine} d={lineGen(highlightedData) ?? ''}/>
+      {
+        highlightedData.filter(d => d.value !== 0).map((d, i) => {
+          return <circle className={styles.highlightedMarker} key={i} cx={timeScale(d.time)} cy={valueScale(d.value)} r={2}/>
+        })
+      }
     </g>
   </g>;
 };

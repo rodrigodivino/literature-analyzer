@@ -2,7 +2,7 @@ import {FunctionComponent, useEffect, useRef} from "react";
 import styles from './vertical-scroller.module.css';
 import {drag, select} from "d3";
 import {VerticalScrollerTypes} from "./vertical-scroller.types";
-import useTracker from "../../../hooks/shared-module/utils-module/use-tracker";
+import usePointerTo from "../../../hooks/shared-module/utils-module/use-pointer-to";
 
 const VerticalScroller: FunctionComponent<VerticalScrollerTypes.Props> = (
     {
@@ -16,8 +16,8 @@ const VerticalScroller: FunctionComponent<VerticalScrollerTypes.Props> = (
   const startingY = useRef<number>(0);
   const startingPosition = useRef<[number, number]>([0, 0]);
   
-  const trackedHeight = useTracker<number>(height);
-  const trackedPosition = useTracker<[number, number]>(position);
+  const pointerToHeight = usePointerTo<number>(height);
+  const pointerToPosition = usePointerTo<[number, number]>(position);
   
   useEffect(() => {
     if (!handle.current) {
@@ -27,11 +27,11 @@ const VerticalScroller: FunctionComponent<VerticalScrollerTypes.Props> = (
     const dragBehavior = drag<SVGRectElement, any, unknown>()
         .on('start', event => {
           startingY.current = event.y;
-          startingPosition.current = trackedPosition.current;
+          startingPosition.current = pointerToPosition.current;
         })
         .on('drag', event => {
-          const dy = (event.y - startingY.current) / trackedHeight.current;
-          const rawNewPosition = [trackedPosition.current[0] + dy, trackedPosition.current[1] + dy];
+          const dy = (event.y - startingY.current) / pointerToHeight.current;
+          const rawNewPosition = [pointerToPosition.current[0] + dy, pointerToPosition.current[1] + dy];
           const limitedNewPosition = rawNewPosition.map(p => {
             return p - Math.max(0, rawNewPosition[1] - 1);
           }).map(p => {
@@ -42,7 +42,7 @@ const VerticalScroller: FunctionComponent<VerticalScrollerTypes.Props> = (
         });
     
     select(handle.current).call(dragBehavior);
-  }, [$onNewPosition$,trackedPosition, handle, startingY, trackedHeight]);
+  }, [$onNewPosition$,pointerToPosition, handle, startingY, pointerToHeight]);
   
   return <g>
     <rect className={styles.background} width={width} height={height}/>

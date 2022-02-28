@@ -11,6 +11,12 @@
     stroke-width: 2px;
 }
 
+.highlightedMarker {
+    fill: steelblue;
+    stroke: #336790;
+    /*stroke-width: 2px;*/
+}
+
 .background {
     fill: none;
 }

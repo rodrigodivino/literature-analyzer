@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    background-color: #555551;
+
+}
+
+.main {
+    width: 100%;
+    max-width: 1000px;
+    height: 100%;
+    background-color: #336790;
+    margin: 0 auto 0 auto;
+    min-height: 0;
+}
+
+.footer {
+    width: 100%;
+    height: 25px;
+    min-height: 0;
+    background-color: slategray;
+}
+
+.header {
+    width: 100%;
+    height: 50px;
+    background-color: slategray;
+    min-height: 0;
+}
