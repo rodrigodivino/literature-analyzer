@@ -12,9 +12,9 @@
 }
 
 .highlightedMarker {
-    fill: steelblue;
-    stroke: #336790;
-    /*stroke-width: 2px;*/
+    fill: #FFF;
+    stroke: steelblue;
+    stroke-width: 2px;
 }
 
 .background {
