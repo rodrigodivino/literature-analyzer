@@ -6,4 +6,6 @@ export namespace BarCellTypes {
     max: number;
     color?: string;
   }
+  
+  export type SVGProps = Omit<BarCellTypes.Props, 'width' | 'height'>
 }

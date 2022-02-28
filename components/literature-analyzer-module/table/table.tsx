@@ -1,20 +1,13 @@
-import {FunctionComponent, useMemo, useRef} from "react";
+import {FunctionComponent, useMemo} from "react";
 import styles from "./table.module.css";
 import {TableTypes} from "./table.types";
-import {useResponsiveSVG} from "../../../hooks/shared-module/utils-module/use-responsive-svg";
-import {TableConst} from "./table.const";
-import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
-import {extent, max, range} from "d3";
+import {extent, max} from "d3";
 import {TrendCellTypes} from "../../shared-module/trend-cell/trend-cell.types";
+import SVGBarCell from "../../shared-module/bar-cell/svg-bar-cell";
+import SVGTrendCell from "../../shared-module/trend-cell/trend-cell-svg";
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
-  const svg = useRef<SVGSVGElement>(null);
-  
-  const [width, height] = useResponsiveSVG(svg);
-  
-  const [innerWidth, innerHeight, translate] = getMarginConvention(width, height, TableConst.MARGIN);
-  
   const maxOccurrenceInRecent = max(data.keywords, k => k.occurrencesInRecent)!;
   const maxOccurrenceInSurvey = max(data.keywords, k => k.occurrencesInSurveys)!;
   
@@ -59,19 +52,29 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
         </th>
       </tr>
       {
-        range(50).map(d => {
-          return <tr key={d}>
+        data.keywords.map(d => {
+          return <tr key={d.keyword}>
             <td>
-              Test
+              {d.keyword}
             </td>
             <td>
-              Test
+              <div className={styles.cellDIV}>
+                <SVGBarCell value={d.occurrencesInRecent} max={maxOccurrenceInRecent}/>
+              </div>
+            
             </td>
             <td>
-              Test
+              <div className={styles.cellDIV}>
+                <SVGBarCell value={d.occurrencesInSurveys} max={maxOccurrenceInSurvey}/>
+              </div>
             </td>
             <td>
-              Test
+              <div className={styles.cellDIV}>
+                <SVGTrendCell contextData={trendCellList}
+                              highlightedData={trendCellData[d.keyword]}
+                              valueDomain={trendValueDomain}
+                              timeDomain={trendTimeDomain}/>
+              </div>
             </td>
           </tr>;
         })

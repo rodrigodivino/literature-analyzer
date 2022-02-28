@@ -8,6 +8,8 @@ export namespace TrendCellTypes {
     highlightedData: TrendCellTypes.TrendDatum[];
   }
   
+  export type SVGProps = Omit<TrendCellTypes.Props, 'width' | 'height'>
+  
   export interface TrendDatum{
     time: number,
     value: number,
