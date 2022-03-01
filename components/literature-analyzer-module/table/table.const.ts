@@ -8,7 +8,7 @@ export namespace TableConst {
   export const COLUMN_TO_KEY = new Map<TableTypes.ColumnType, keyof KeywordStats>(
       [
         [TableTypes.ColumnType.SURVEY, 'occurrencesInSurveys'],
-        [TableTypes.ColumnType.RECENT, 'occurrencesInRecent'],
+        [TableTypes.ColumnType.OCCURRENCES, 'occurrencesInRecent'],
         [TableTypes.ColumnType.KEYWORD, 'keyword'],
         [TableTypes.ColumnType.TREND, 'occurrencesOverTime'],
       ]

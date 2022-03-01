@@ -11,7 +11,7 @@ import ColumnType = TableTypes.ColumnType;
 
 
 const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
-  const [sortedColumn, setSortedColumn] = useState<TableTypes.ColumnType>(ColumnType.RECENT);
+  const [sortedColumn, setSortedColumn] = useState<TableTypes.ColumnType>(ColumnType.OCCURRENCES);
   const [descentSortMode, setDescentSortMode] = useState<boolean>(true);
   
   data.keywords.sort((a, b) => {
@@ -19,18 +19,18 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     switch (sortedColumn) {
       case TableTypes.ColumnType.KEYWORD:
         return sortingFunction(b.keyword, a.keyword);
-      case TableTypes.ColumnType.RECENT:
-        return sortingFunction(a.occurrencesInRecent, b.occurrencesInRecent);
+      case TableTypes.ColumnType.OCCURRENCES:
+        return sortingFunction(a.totalOccurrences, b.totalOccurrences);
       case TableTypes.ColumnType.SURVEY:
         return sortingFunction(a.occurrencesInSurveys, b.occurrencesInSurveys);
       case TableTypes.ColumnType.TREND:
         return sortingFunction(a.averageTrendStrength, b.averageTrendStrength);
       default:
-        return sortingFunction(a.occurrencesInRecent, b.occurrencesInRecent);
+        return sortingFunction(a.totalOccurrences, b.totalOccurrences);
     }
   });
   
-  const maxOccurrenceInRecent = max(data.keywords, k => k.occurrencesInRecent)!;
+  const maxOccurrence = max(data.keywords, k => k.totalOccurrences)!;
   const maxOccurrenceInSurvey = max(data.keywords, k => k.occurrencesInSurveys)!;
   
   const occurrencesOverTime = useMemo(() => {
@@ -76,10 +76,10 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
         }>
           Keyword
         </th>
-        <th id={TableTypes.ColumnType.RECENT} className={
-          `${sortedColumn === TableTypes.ColumnType.RECENT ? sortClass : ''}`
+        <th id={TableTypes.ColumnType.OCCURRENCES} className={
+          `${sortedColumn === TableTypes.ColumnType.OCCURRENCES ? sortClass : ''}`
         }>
-          Recent Occurrences
+          Occurrences
         </th>
         <th id={TableTypes.ColumnType.SURVEY} className={
           `${sortedColumn === TableTypes.ColumnType.SURVEY ? sortClass : ''}`
@@ -98,12 +98,12 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
         data.keywords.map(d => {
           return <tr key={d.keyword}>
             <td>
-              {d.keyword}
+              <span className={styles.keywordName}>{d.keyword}</span>
             </td>
             <td>
               <div className={styles.cellDIV}>
                 <VirtualizationWrapper>
-                  <SVGBarCell value={d.occurrencesInRecent} max={maxOccurrenceInRecent}/>
+                  <SVGBarCell value={d.totalOccurrences} max={maxOccurrence}/>
                 </VirtualizationWrapper>
               </div>
             </td>
@@ -134,110 +134,6 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     
     
     </table>
-    
-    
-    {/*<svg ref={svg} className={styles.svg}>*/
-    }
-    {/*  <g transform={translate} >*/
-    }
-    {/*    <g>*/
-    }
-    {/*      <g className="zoom-area" ref={zoomElement}>*/
-    }
-    {/*        <rect className={styles.zoomBackground} width={innerWidth} height={innerHeight}/>*/
-    }
-    {/*        {*/
-    }
-    {/*          tableLayout.map((cell, i) => {*/
-    }
-    {/*            return <g key={cell.key} className="table-cell"*/
-    }
-    {/*                      transform={`translate(${cell.x},${cell.y})`}>*/
-    }
-    {/*              {(() => {*/
-    }
-    {/*                switch (cell.column) {*/
-    }
-    {/*                  case TableTypes.ColumnType.TITLE:*/
-    }
-    {/*                    return <LabelCell*/
-    }
-    {/*                        width={cell.width}*/
-    }
-    {/*                        height={cell.height}*/
-    }
-    {/*                        label={cell.d.keyword}*/
-    }
-    {/*                    />;*/
-    }
-    {/*                  case TableTypes.ColumnType.RECENT:*/
-    }
-    {/*                    return <BarCell*/
-    }
-    {/*                        width={cell.width}*/
-    }
-    {/*                        height={cell.height}*/
-    }
-    {/*                        value={cell.d.occurrencesInRecent}*/
-    }
-    {/*                        max={maxOccurrenceInRecent}*/
-    }
-    {/*                    />;*/
-    }
-    {/*                  case TableTypes.ColumnType.SURVEY:*/
-    }
-    {/*                    return <BarCell*/
-    }
-    {/*                        width={cell.width}*/
-    }
-    {/*                        height={cell.height}*/
-    }
-    {/*                        value={cell.d.occurrencesInSurveys}*/
-    }
-    {/*                        max={maxOccurrenceInSurvey}*/
-    }
-    {/*                        color={'steelblue'}*/
-    }
-    {/*                    />;*/
-    }
-    {/*                  case TableTypes.ColumnType.TREND:*/
-    }
-    {/*                    return <TrendCell*/
-    }
-    {/*                        width={cell.width}*/
-    }
-    {/*                        height={cell.height}*/
-    }
-    {/*                        contextData={trendCellList}*/
-    }
-    {/*                        highlightedData={trendCellData[cell.d.keyword]}*/
-    }
-    {/*                        valueDomain={trendValueDomain}*/
-    }
-    {/*                        timeDomain={trendTimeDomain}*/
-    }
-    {/*                    />;*/
-    }
-    {/*                }*/
-    }
-    {/*              })()}*/
-    }
-    {/*            </g>;*/
-    }
-    {/*    */
-    }
-    {/*          })*/
-    }
-    {/*        }*/
-    }
-    {/*      </g>*/
-    }
-    {/*    </g>*/
-    }
-    {/*  </g>*/
-    }
-    {/*</svg>*/
-    }
   </div>;
   
 };

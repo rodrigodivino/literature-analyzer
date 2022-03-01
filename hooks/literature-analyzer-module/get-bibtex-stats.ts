@@ -3,8 +3,6 @@ import {getStopWordStatus} from "./get-stopword-status";
 import {ascending, descending, extent, max, range} from "d3";
 
 export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
-  const recentYearThreshold = new Date().getUTCFullYear() - 5;
-  
   const [minYear, maxYear] = extent(bibtex, paperEntry => parseFloat(paperEntry.entryTags?.year ?? '')) as [number, number];
   
   const bibtexData = bibtex.filter(paperEntry => paperEntry?.entryTags?.author)
@@ -30,7 +28,6 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
         const stat: KeywordStats = {
           keyword: paperData.titleWords.slice(i, i + 2 + n).join(' '),
           totalOccurrences: 0,
-          occurrencesInRecent: 0,
           occurrencesInSurveys: 0,
           occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0})),
           averageTrendStrength: 0
@@ -55,10 +52,6 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
       
       if(paddedTitle.includes(paddedKeyword)) {
         keyword.totalOccurrences += 1;
-        
-        if(paperData.year >= recentYearThreshold) {
-          keyword.occurrencesInRecent += 1;
-        }
         
         if(paperData.processedTitle.includes('survey')) {
           keyword.occurrencesInSurveys += 1
@@ -104,7 +97,6 @@ export interface BibTexStats {
 export interface KeywordStats {
   keyword: string;
   totalOccurrences: number
-  occurrencesInRecent: number;
   occurrencesInSurveys: number;
   occurrencesOverTime: Array<{ year: number, occurrences: number }>;
   averageTrendStrength: number;
