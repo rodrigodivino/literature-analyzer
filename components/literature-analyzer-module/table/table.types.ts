@@ -1,8 +1,8 @@
-import {BibTexStats} from "../../../hooks/literature-analyzer-module/get-bibtex-stats";
+import {KeywordStats} from "../../../hooks/literature-analyzer-module/get-bibtex-stats";
 
 export namespace TableTypes {
   export interface Props {
-    data: BibTexStats;
+    data: KeywordStats[];
   }
   
   export enum ColumnType {

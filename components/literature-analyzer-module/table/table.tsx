@@ -14,7 +14,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   const [sortedColumn, setSortedColumn] = useState<TableTypes.ColumnType>(ColumnType.OCCURRENCES);
   const [descentSortMode, setDescentSortMode] = useState<boolean>(true);
   
-  data.keywords.sort((a, b) => {
+  data.sort((a, b) => {
     const sortingFunction = descentSortMode ? descending : ascending;
     switch (sortedColumn) {
       case TableTypes.ColumnType.KEYWORD:
@@ -30,12 +30,12 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
     }
   });
   
-  const maxOccurrence = max(data.keywords, k => k.totalOccurrences)!;
-  const maxOccurrenceInSurvey = max(data.keywords, k => k.occurrencesInSurveys)!;
+  const maxOccurrence = max(data, k => k.totalOccurrences)!;
+  const maxOccurrenceInSurvey = max(data, k => k.occurrencesInSurveys)!;
   
   const occurrencesOverTime = useMemo(() => {
-    return data.keywords.flatMap(k => k.occurrencesOverTime);
-  }, [data.keywords]);
+    return data.flatMap(k => k.occurrencesOverTime);
+  }, [data]);
   
   const trendTimeDomain = useMemo(() => {
     return extent(occurrencesOverTime, o => o.year) as [number, number];
@@ -46,11 +46,11 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   }, [occurrencesOverTime]);
   
   const trendCellData = useMemo(() => {
-    return data.keywords.reduce((acc, keyword) => {
+    return data.reduce((acc, keyword) => {
       acc[keyword.keyword] = keyword.occurrencesOverTime.map(o => ({time: o.year, value: o.occurrences, d: o}));
       return acc;
     }, {} as Record<string, TrendCellTypes.TrendDatum[]>);
-  }, [data.keywords]);
+  }, [data]);
   
   const trendCellList = useMemo(() => {
     return Object.values(trendCellData);
@@ -95,7 +95,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
       </thead>
       <tbody>
       {
-        data.keywords.map(d => {
+        data.map(d => {
           return <tr key={d.keyword}>
             <td>
               <span className={styles.keywordName}>{d.keyword}</span>

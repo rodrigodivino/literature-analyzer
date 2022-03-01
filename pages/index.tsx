@@ -2,14 +2,44 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Table from "../components/literature-analyzer-module/table/table";
-import {getBibtexStats} from "../hooks/literature-analyzer-module/get-bibtex-stats";
-import {testBibTex} from "../private/testBibTex";
+import {getBibtexStats, KeywordStats} from "../hooks/literature-analyzer-module/get-bibtex-stats";
+import {useEffect, useRef, useState} from "react";
+import {ParsedBibtex, toJSON} from "@orcid/bibtex-parse-js";
 
 
 const Home: NextPage = () => {
-  const testBibTex = toJSON('')
+  const [bibtexStats, setBibtexStats] = useState<KeywordStats[]>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const bibtexStats = getBibtexStats(testBibTex);
+  useEffect(() => {
+    if(!fileInputRef.current) return;
+    console.log("fileInputRef.current", fileInputRef.current);
+    fileInputRef.current.addEventListener("change", () => {
+      const files = fileInputRef.current!.files!;
+      
+      const promises = [];
+      
+      for(let i =0; i < files.length; i++) {
+        promises.push(new Promise<ParsedBibtex[]>((resolve, reject) => {
+          const file = files[i];
+          const reader = new FileReader();
+          reader.readAsText(file, 'utf-8')
+          reader.onload = (event) => {
+            const content = event.target?.result as string;
+            resolve(toJSON(content));
+          }
+          reader.onerror = () => {
+            reject('Error reading file')
+          }
+        }));
+      }
+  
+      Promise.all(promises).then((parsedBibtexList) => {
+        setBibtexStats(getBibtexStats(parsedBibtexList.flat(1)));
+      });
+      
+    }, false)
+  }, [fileInputRef])
   
   return (
     <div className={styles.container}>
@@ -19,16 +49,22 @@ const Home: NextPage = () => {
       </Head>
       
       <header className={styles.header}>
-        Header
+        <h1>Literature Analyzer</h1>
+        <p>Upload a bibtex file to see statistics about paper titles</p>
+        <input multiple={true} ref={fileInputRef} type={'file'} />
       </header>
-
-      <main className={styles.main}>
-        <Table data={bibtexStats}/>
-      </main>
+  
+      {
+        bibtexStats &&
+        <main className={styles.main}>
+            <Table data={bibtexStats}/>
+        </main>
+      }
+      
 
       <footer className={styles.footer}>
         <hr/>
-        <b>Design</b>: Rodrigo Divino. <b>Implementation:</b> Rodrigo Divino.
+        <b>App by:</b> Rodrigo Divino.
       </footer>
     </div>
   )

@@ -2,7 +2,7 @@ import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import {getStopWordStatus} from "./get-stopword-status";
 import {ascending, descending, extent, max, range} from "d3";
 
-export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
+export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
   const [minYear, maxYear] = extent(bibtex, paperEntry => parseFloat(paperEntry.entryTags?.year ?? '')) as [number, number];
   
   const bibtexData = bibtex.filter(paperEntry => paperEntry?.entryTags?.author)
@@ -85,14 +85,8 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): BibTexStats => {
     keywordStat.averageTrendStrength /= weight;
   })
   
-  return {
-    keywords: keywordStats
-  };
+  return keywordStats
 };
-
-export interface BibTexStats {
-  keywords: KeywordStats[];
-}
 
 export interface KeywordStats {
   keyword: string;
