@@ -6,6 +6,7 @@ import {TrendCellTypes} from "../../shared-module/trend-cell/trend-cell.types";
 import SVGBarCell from "../../shared-module/bar-cell/svg-bar-cell";
 import SVGTrendCell from "../../shared-module/trend-cell/trend-cell-svg";
 import {MouseEvent} from 'React';
+import VirtualizationWrapper from "../../shared-module/virtualization-wrapper/virtualization-wrapper";
 import ColumnType = TableTypes.ColumnType;
 
 
@@ -13,9 +14,9 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   const [sortedColumn, setSortedColumn] = useState<TableTypes.ColumnType>(ColumnType.RECENT);
   const [descentSortMode, setDescentSortMode] = useState<boolean>(true);
   
-  data.keywords.sort((a,b) => {
+  data.keywords.sort((a, b) => {
     const sortingFunction = descentSortMode ? descending : ascending;
-    switch(sortedColumn) {
+    switch (sortedColumn) {
       case TableTypes.ColumnType.KEYWORD:
         return sortingFunction(b.keyword, a.keyword);
       case TableTypes.ColumnType.RECENT:
@@ -27,7 +28,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
       default:
         return sortingFunction(a.occurrencesInRecent, b.occurrencesInRecent);
     }
-  })
+  });
   
   const maxOccurrenceInRecent = max(data.keywords, k => k.occurrencesInRecent)!;
   const maxOccurrenceInSurvey = max(data.keywords, k => k.occurrencesInSurveys)!;
@@ -57,13 +58,13 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
   
   const handleHeaderClick: MouseEventHandler<HTMLTableRowElement> = (e: MouseEvent<HTMLTableRowElement>) => {
     const column = (e.target as HTMLElement).id as TableTypes.ColumnType;
-    if(column === sortedColumn) {
+    if (column === sortedColumn) {
       setDescentSortMode(!descentSortMode);
     } else {
       setDescentSortMode(true);
       setSortedColumn(column);
     }
-  }
+  };
   
   const sortClass = descentSortMode ? styles.sortDescent : styles.sortAscent;
   return <div className={styles.container}>
@@ -101,84 +102,145 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
             </td>
             <td>
               <div className={styles.cellDIV}>
-                <SVGBarCell value={d.occurrencesInRecent} max={maxOccurrenceInRecent}/>
-              </div>
-      
-            </td>
-            <td>
-              <div className={styles.cellDIV}>
-                <SVGBarCell value={d.occurrencesInSurveys} max={maxOccurrenceInSurvey}/>
+                <VirtualizationWrapper>
+                  <SVGBarCell value={d.occurrencesInRecent} max={maxOccurrenceInRecent}/>
+                </VirtualizationWrapper>
               </div>
             </td>
             <td>
+              
               <div className={styles.cellDIV}>
-                <SVGTrendCell contextData={trendCellList}
-                              highlightedData={trendCellData[d.keyword]}
-                              valueDomain={trendValueDomain}
-                              timeDomain={trendTimeDomain}/>
+                <VirtualizationWrapper>
+                  <SVGBarCell value={d.occurrencesInSurveys} max={maxOccurrenceInSurvey}/>
+                </VirtualizationWrapper>
+              </div>
+            
+            </td>
+            <td>
+              <div className={styles.cellDIV}>
+                <VirtualizationWrapper>
+                  <SVGTrendCell contextData={trendCellList}
+                                highlightedData={trendCellData[d.keyword]}
+                                valueDomain={trendValueDomain}
+                                timeDomain={trendTimeDomain}/>
+                </VirtualizationWrapper>
               </div>
             </td>
           </tr>;
+          
         })
       }
       </tbody>
-     
+    
     
     </table>
     
     
-    {/*<svg ref={svg} className={styles.svg}>*/}
-    {/*  <g transform={translate} >*/}
-    {/*    <g>*/}
-    {/*      <g className="zoom-area" ref={zoomElement}>*/}
-    {/*        <rect className={styles.zoomBackground} width={innerWidth} height={innerHeight}/>*/}
-    {/*        {*/}
-    {/*          tableLayout.map((cell, i) => {*/}
-    {/*            return <g key={cell.key} className="table-cell"*/}
-    {/*                      transform={`translate(${cell.x},${cell.y})`}>*/}
-    {/*              {(() => {*/}
-    {/*                switch (cell.column) {*/}
-    {/*                  case TableTypes.ColumnType.TITLE:*/}
-    {/*                    return <LabelCell*/}
-    {/*                        width={cell.width}*/}
-    {/*                        height={cell.height}*/}
-    {/*                        label={cell.d.keyword}*/}
-    {/*                    />;*/}
-    {/*                  case TableTypes.ColumnType.RECENT:*/}
-    {/*                    return <BarCell*/}
-    {/*                        width={cell.width}*/}
-    {/*                        height={cell.height}*/}
-    {/*                        value={cell.d.occurrencesInRecent}*/}
-    {/*                        max={maxOccurrenceInRecent}*/}
-    {/*                    />;*/}
-    {/*                  case TableTypes.ColumnType.SURVEY:*/}
-    {/*                    return <BarCell*/}
-    {/*                        width={cell.width}*/}
-    {/*                        height={cell.height}*/}
-    {/*                        value={cell.d.occurrencesInSurveys}*/}
-    {/*                        max={maxOccurrenceInSurvey}*/}
-    {/*                        color={'steelblue'}*/}
-    {/*                    />;*/}
-    {/*                  case TableTypes.ColumnType.TREND:*/}
-    {/*                    return <TrendCell*/}
-    {/*                        width={cell.width}*/}
-    {/*                        height={cell.height}*/}
-    {/*                        contextData={trendCellList}*/}
-    {/*                        highlightedData={trendCellData[cell.d.keyword]}*/}
-    {/*                        valueDomain={trendValueDomain}*/}
-    {/*                        timeDomain={trendTimeDomain}*/}
-    {/*                    />;*/}
-    {/*                }*/}
-    {/*              })()}*/}
-    {/*            </g>;*/}
-    {/*    */}
-    {/*          })*/}
-    {/*        }*/}
-    {/*      </g>*/}
-    {/*    </g>*/}
-    {/*  </g>*/}
-    {/*</svg>*/}
+    {/*<svg ref={svg} className={styles.svg}>*/
+    }
+    {/*  <g transform={translate} >*/
+    }
+    {/*    <g>*/
+    }
+    {/*      <g className="zoom-area" ref={zoomElement}>*/
+    }
+    {/*        <rect className={styles.zoomBackground} width={innerWidth} height={innerHeight}/>*/
+    }
+    {/*        {*/
+    }
+    {/*          tableLayout.map((cell, i) => {*/
+    }
+    {/*            return <g key={cell.key} className="table-cell"*/
+    }
+    {/*                      transform={`translate(${cell.x},${cell.y})`}>*/
+    }
+    {/*              {(() => {*/
+    }
+    {/*                switch (cell.column) {*/
+    }
+    {/*                  case TableTypes.ColumnType.TITLE:*/
+    }
+    {/*                    return <LabelCell*/
+    }
+    {/*                        width={cell.width}*/
+    }
+    {/*                        height={cell.height}*/
+    }
+    {/*                        label={cell.d.keyword}*/
+    }
+    {/*                    />;*/
+    }
+    {/*                  case TableTypes.ColumnType.RECENT:*/
+    }
+    {/*                    return <BarCell*/
+    }
+    {/*                        width={cell.width}*/
+    }
+    {/*                        height={cell.height}*/
+    }
+    {/*                        value={cell.d.occurrencesInRecent}*/
+    }
+    {/*                        max={maxOccurrenceInRecent}*/
+    }
+    {/*                    />;*/
+    }
+    {/*                  case TableTypes.ColumnType.SURVEY:*/
+    }
+    {/*                    return <BarCell*/
+    }
+    {/*                        width={cell.width}*/
+    }
+    {/*                        height={cell.height}*/
+    }
+    {/*                        value={cell.d.occurrencesInSurveys}*/
+    }
+    {/*                        max={maxOccurrenceInSurvey}*/
+    }
+    {/*                        color={'steelblue'}*/
+    }
+    {/*                    />;*/
+    }
+    {/*                  case TableTypes.ColumnType.TREND:*/
+    }
+    {/*                    return <TrendCell*/
+    }
+    {/*                        width={cell.width}*/
+    }
+    {/*                        height={cell.height}*/
+    }
+    {/*                        contextData={trendCellList}*/
+    }
+    {/*                        highlightedData={trendCellData[cell.d.keyword]}*/
+    }
+    {/*                        valueDomain={trendValueDomain}*/
+    }
+    {/*                        timeDomain={trendTimeDomain}*/
+    }
+    {/*                    />;*/
+    }
+    {/*                }*/
+    }
+    {/*              })()}*/
+    }
+    {/*            </g>;*/
+    }
+    {/*    */
+    }
+    {/*          })*/
+    }
+    {/*        }*/
+    }
+    {/*      </g>*/
+    }
+    {/*    </g>*/
+    }
+    {/*  </g>*/
+    }
+    {/*</svg>*/
+    }
   </div>;
+  
 };
 
 export default Table;
+

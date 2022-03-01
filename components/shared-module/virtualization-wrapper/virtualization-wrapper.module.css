@@ -1,0 +1,9 @@
+.wrapper {
+    display: contents;
+}
+
+.loading {
+    font-size: 12px;
+    color: #515151;
+    font-family: Arial, sans-serif;
+}

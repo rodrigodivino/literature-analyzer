@@ -13,7 +13,6 @@ const SVGTrendCell: FunctionComponent<TrendCellTypes.SVGProps> = (
 ) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [width, height] = useResponsiveMural(svgRef);
-  
   return <svg ref={svgRef} style={{width: '100%', height: '100%'}}>
     <TrendCell width={width} height={height} contextData={contextData} highlightedData={highlightedData}
                timeDomain={timeDomain} valueDomain={valueDomain}/>
