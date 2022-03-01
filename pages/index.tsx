@@ -27,7 +27,8 @@ const Home: NextPage = () => {
       </main>
 
       <footer className={styles.footer}>
-        Footer
+        <hr/>
+        <b>Design</b>: Rodrigo Divino. <b>Implementation:</b> Rodrigo Divino.
       </footer>
     </div>
   )
