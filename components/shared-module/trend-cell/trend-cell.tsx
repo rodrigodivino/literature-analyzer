@@ -1,9 +1,9 @@
-import {FunctionComponent, memo, useEffect} from "react";
+import {FunctionComponent, memo} from "react";
 import {TrendCellTypes} from "./trend-cell.types";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {TrendCellConst} from "./trend-cell.const";
 import {line, scaleLinear} from "d3";
-import styles from './trend-cell.module.css'
+import styles from './trend-cell.module.css';
 
 const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
     {
@@ -23,23 +23,24 @@ const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
   const lineGen = line<TrendCellTypes.TrendDatum>()
       .x(d => timeScale(d.time))
       .y(d => valueScale(d.value))
-      .defined(d => d.value !== 0)
+      .defined(d => d.value !== 0);
+  
+  const contextMesh = contextData.map((contextDatum, i) => {
+    return lineGen(contextDatum);
+  }).join('');
   
   
   return <g className="trend-cell" transform={translate}>
     <rect className={styles.background} width={innerWidth} height={innerHeight}/>
-    {
-      contextData.map((contextDatum, i) => {
-        return <g key={i}>
-          <path className={styles.contextLine} d={lineGen(contextDatum) ?? ''}/>
-        </g>
-      })
-    }
+    <g>
+      <path className={styles.contextLine} d={contextMesh}/>
+    </g>
     <g>
       <path className={styles.highlightedLine} d={lineGen(highlightedData) ?? ''}/>
       {
         highlightedData.filter(d => d.value !== 0).map((d, i) => {
-          return <circle className={styles.highlightedMarker} key={i} cx={timeScale(d.time)} cy={valueScale(d.value)} r={2}/>
+          return <circle className={styles.highlightedMarker} key={i} cx={timeScale(d.time)} cy={valueScale(d.value)}
+                         r={2}/>;
         })
       }
     </g>
