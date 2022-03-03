@@ -1,26 +1,29 @@
 import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import {getStopWordStatus} from "./get-stopword-status";
-import {ascending, descending, extent, max, maxIndex, range} from "d3";
+import {ascending, descending, extent, range, sum} from "d3";
 
 export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
-  const [minYear, maxYear] = extent(bibtex, paperEntry => parseFloat(paperEntry.entryTags?.year ?? '')) as [number, number];
+  const [minYear, maxYear] = extent(
+      bibtex,
+      paperEntry => parseFloat(paperEntry.entryTags?.year ?? '')
+  ) as [number, number];
   
   const bibtexData = bibtex.filter(paperEntry => paperEntry?.entryTags?.author)
       .map(paperEntry => {
-        const titleWords =  ((paperEntry.entryTags?.title))
+        const titleWords = ((paperEntry.entryTags?.title))
             .replace(/[\W_]+/g, " ")
             .split(' ')
             .filter(w => w)
             .map(w => w.toLowerCase())
-            .filter(w => !getStopWordStatus(w))
-            
+            .filter(w => !getStopWordStatus(w));
+        
         return {
           d: paperEntry,
           titleWords,
           processedTitle: titleWords.join(' '),
-          year: parseFloat(paperEntry.entryTags?.year ?? ''),
-        }
-      })
+          year: parseFloat(paperEntry.entryTags?.year ?? '')
+        };
+      });
   
   const allKeywordStats: KeywordStats[] = bibtexData.flatMap(paperData => {
     return paperData.titleWords.flatMap((word, i) => {
@@ -31,35 +34,35 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
           occurrencesInSurveys: 0,
           occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0, rank: 0})),
           averageTrendStrength: 0
-        }
+        };
         return stat;
-      })
-    })
-  })
+      });
+    });
+  });
   
   
-  const keywordArray = allKeywordStats.map(k => k.keyword)
+  const keywordArray = allKeywordStats.map(k => k.keyword);
   
   const uniqueKeywordStats = allKeywordStats.filter((k, i) => {
     return keywordArray.indexOf(k.keyword) === i;
-  })
+  });
   
   
-  for(let keyword of uniqueKeywordStats) {
+  for (let keyword of uniqueKeywordStats) {
     for (let paperData of bibtexData) {
       const paddedTitle = ' ' + paperData.processedTitle + ' ';
       const paddedKeyword = ' ' + keyword.keyword + ' ';
       
-      if(paddedTitle.includes(paddedKeyword)) {
+      if (paddedTitle.includes(paddedKeyword)) {
         keyword.totalOccurrences += 1;
         
-        if(paperData.processedTitle.includes('survey')) {
-          keyword.occurrencesInSurveys += 1
+        if (paperData.processedTitle.includes('survey')) {
+          keyword.occurrencesInSurveys += 1;
         }
         
         const keywordYearRecord = keyword.occurrencesOverTime.find(t => t.year === paperData.year);
         
-        if(keywordYearRecord) {
+        if (keywordYearRecord) {
           keywordYearRecord.occurrences += 1;
         }
       }
@@ -68,37 +71,34 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
   
   const keywordStats = uniqueKeywordStats
       .filter(keywordRecord => keywordRecord.totalOccurrences > Math.ceil(bibtex.length * 0.01))
-      .sort((a,b) => descending(a.totalOccurrences, b.totalOccurrences))
+      .sort((a, b) => descending(a.totalOccurrences, b.totalOccurrences));
   
   keywordStats.forEach(keywordStat => {
     keywordStat.occurrencesOverTime
-        .sort((a,b) => ascending(a.occurrences, b.occurrences))
-    
-    
-    keywordStat.occurrencesOverTime.forEach((occurrence, i) => {
-      occurrence.rank = i + 1;
-    })
-    
-    keywordStat.occurrencesOverTime
-        .sort((a,b) => ascending(a.year, b.year))
-  })
+        .sort((a, b) => ascending(a.year, b.year));
+  });
   
   keywordStats.forEach(keywordStat => {
-    keywordStat.averageTrendStrength = 0;
-    keywordStat.occurrencesOverTime.forEach((occurrence, i) => {
-      keywordStat.averageTrendStrength += (i + 1) * occurrence.rank;
-    })
-  })
+    let acc = 0;
+    let target = keywordStat.totalOccurrences * 0.75;
+    let i = -1;
+    while (acc < target) {
+      i++;
+      acc += keywordStat.occurrencesOverTime[i].occurrences;
+    }
+    const year = keywordStat.occurrencesOverTime[i].year;
+    const worksAfterBulk = sum(keywordStat.occurrencesOverTime.slice(i), o => o.occurrences);
+    keywordStat.averageTrendStrength = year + (worksAfterBulk / 1000000);
+  });
   
-  console.log("keywordStats", keywordStats);
   
-  return keywordStats
+  return keywordStats;
 };
 
 export interface KeywordStats {
   keyword: string;
-  totalOccurrences: number
+  totalOccurrences: number;
   occurrencesInSurveys: number;
-  occurrencesOverTime: Array<{ year: number, occurrences: number, rank: number }>;
+  occurrencesOverTime: Array<{ year: number, occurrences: number}>;
   averageTrendStrength: number;
 }
