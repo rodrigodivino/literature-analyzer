@@ -46,7 +46,7 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
   const uniqueKeywordStats = allKeywordStats.filter((k, i) => {
     return keywordArray.indexOf(k.keyword) === i;
   });
-  
+
   
   for (let keyword of uniqueKeywordStats) {
     for (let paperData of bibtexData) {
