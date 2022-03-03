@@ -7,13 +7,13 @@
 
 .highlightedLine {
     fill: none;
-    stroke: steelblue;
+    stroke: darkslategray;
     stroke-width: 2px;
 }
 
 .highlightedMarker {
     fill: #FFF;
-    stroke: steelblue;
+    stroke: darkslategray;
     stroke-width: 2px;
 }
 
