@@ -1,6 +1,6 @@
 import {ParsedBibtex} from "@orcid/bibtex-parse-js";
 import {getStopWordStatus} from "./get-stopword-status";
-import {ascending, descending, extent, max, range} from "d3";
+import {ascending, descending, extent, max, maxIndex, range} from "d3";
 
 export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
   const [minYear, maxYear] = extent(bibtex, paperEntry => parseFloat(paperEntry.entryTags?.year ?? '')) as [number, number];
@@ -29,7 +29,7 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
           keyword: paperData.titleWords.slice(i, i + 2 + n).join(' '),
           totalOccurrences: 0,
           occurrencesInSurveys: 0,
-          occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0})),
+          occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0, rank: 0})),
           averageTrendStrength: 0
         }
         return stat;
@@ -72,17 +72,25 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
   
   keywordStats.forEach(keywordStat => {
     keywordStat.occurrencesOverTime
+        .sort((a,b) => ascending(a.occurrences, b.occurrences))
+    
+    
+    keywordStat.occurrencesOverTime.forEach((occurrence, i) => {
+      occurrence.rank = i + 1;
+    })
+    
+    keywordStat.occurrencesOverTime
         .sort((a,b) => ascending(a.year, b.year))
   })
   
   keywordStats.forEach(keywordStat => {
-    let weight = 0;
-    for(let i = 1; i < keywordStat.occurrencesOverTime.length; i++) {
-      weight += i;
-      keywordStat.averageTrendStrength += i * (keywordStat.occurrencesOverTime[i].occurrences - keywordStat.occurrencesOverTime[i-1].occurrences);
-    }
-    keywordStat.averageTrendStrength /= weight;
+    keywordStat.averageTrendStrength = 0;
+    keywordStat.occurrencesOverTime.forEach((occurrence, i) => {
+      keywordStat.averageTrendStrength += (i + 1) * occurrence.rank;
+    })
   })
+  
+  console.log("keywordStats", keywordStats);
   
   return keywordStats
 };
@@ -91,6 +99,6 @@ export interface KeywordStats {
   keyword: string;
   totalOccurrences: number
   occurrencesInSurveys: number;
-  occurrencesOverTime: Array<{ year: number, occurrences: number }>;
+  occurrencesOverTime: Array<{ year: number, occurrences: number, rank: number }>;
   averageTrendStrength: number;
 }

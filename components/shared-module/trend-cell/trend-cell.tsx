@@ -2,7 +2,7 @@ import {FunctionComponent, memo} from "react";
 import {TrendCellTypes} from "./trend-cell.types";
 import {getMarginConvention} from "../../../hooks/shared-module/utils-module/get-margin-convention";
 import {TrendCellConst} from "./trend-cell.const";
-import {line, scaleLinear} from "d3";
+import {line, max, scaleLinear} from "d3";
 import styles from './trend-cell.module.css';
 
 const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
@@ -18,7 +18,7 @@ const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
   const [innerWidth, innerHeight, translate] = getMarginConvention(width, height, TrendCellConst.MARGIN);
   
   const timeScale = scaleLinear<number, number>().domain(timeDomain).range([0, innerWidth]);
-  const valueScale = scaleLinear<number, number>().domain(valueDomain).range([innerHeight, 0]);
+  const valueScale = scaleLinear<number, number>().domain([0, max(highlightedData, d => d.value)] as [number, number]).range([innerHeight, 0]);
   
   const lineGen = line<TrendCellTypes.TrendDatum>()
       .x(d => timeScale(d.time))

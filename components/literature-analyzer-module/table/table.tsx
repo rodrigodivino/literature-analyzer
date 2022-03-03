@@ -24,7 +24,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
       case TableTypes.ColumnType.SURVEY:
         return sortingFunction(a.occurrencesInSurveys, b.occurrencesInSurveys);
       case TableTypes.ColumnType.TREND:
-        return sortingFunction(a.averageTrendStrength, b.averageTrendStrength);
+        return sortingFunction(a.averageTrendStrength, b.averageTrendStrength) || sortingFunction(a.totalOccurrences, b.totalOccurrences);
       default:
         return sortingFunction(a.totalOccurrences, b.totalOccurrences);
     }
