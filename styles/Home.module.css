@@ -34,9 +34,10 @@
     max-width: 1000px;
     margin: 0 auto 0 auto;
     width: 100%;
-    height: 100px;
+    height: 120px;
     min-height: 0;
 }
+
 
 .headerFull {
     height: 100%;
@@ -47,3 +48,33 @@
     justify-items: center;
     justify-content: center;
 }
+
+.loadingMessage {
+    font-size: 16px;
+    color: darkslategray;
+    font-weight: bolder;
+    margin: 5px 0 5px 0;
+}
+
+.header h1 {
+    color: #515151;
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #515151;
+    margin-bottom: 5px;
+}
+
+.headerFull h1 {
+    font-size: 50px;
+    color:  #515151;
+}
+
+.headerFull p {
+    font-size: 30px;
+    color: #515151;
+    margin-bottom: 20px;
+}
+
+

@@ -62,9 +62,9 @@ const Home: NextPage = () => {
         
         <header className={`${styles.header} ${isReady ? '' : styles.headerFull}`}>
           <h1>Literature Analyzer</h1>
-          <p>Upload a bibtex file to see statistics about paper titles</p>
+          <p>Upload bibtex files to see statistics about paper titles</p>
           <input multiple={true} ref={fileInputRef} type={'file'}/>
-          <span>{fileIsLoading ? 'Loading...' : ''}</span>
+          <span className={styles.loadingMessage}>{fileIsLoading ? 'Loading...' : ''}</span>
         </header>
         
         {
