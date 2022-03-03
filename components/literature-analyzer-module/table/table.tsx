@@ -101,7 +101,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
               <span className={styles.keywordName}>{d.keyword}</span>
             </td>
             <td>
-              <div className={styles.cellDIV}>
+              <div className={styles.cellDIV} title={d.totalOccurrencesTitles.map(s => '• ' + s).join('\n')}>
                 <VirtualizationWrapper>
                   <SVGBarCell value={d.totalOccurrences} max={maxOccurrence}/>
                 </VirtualizationWrapper>
@@ -109,7 +109,7 @@ const Table: FunctionComponent<TableTypes.Props> = ({data}) => {
             </td>
             <td>
               
-              <div className={styles.cellDIV}>
+              <div className={styles.cellDIV} title={d.occurrencesInSurveysTitles.map(s => '• ' + s).join('\n')}>
                 <VirtualizationWrapper>
                   <SVGBarCell value={d.occurrencesInSurveys} max={maxOccurrenceInSurvey}/>
                 </VirtualizationWrapper>

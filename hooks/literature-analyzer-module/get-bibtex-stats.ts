@@ -21,6 +21,7 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
           d: paperEntry,
           titleWords,
           processedTitle: titleWords.join(' '),
+          originalTitle: paperEntry?.entryTags?.title ?? '',
           year: parseFloat(paperEntry.entryTags?.year ?? '')
         };
       });
@@ -31,8 +32,10 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
         const stat: KeywordStats = {
           keyword: paperData.titleWords.slice(i, i + 2 + n).join(' '),
           totalOccurrences: 0,
+          totalOccurrencesTitles: [],
           occurrencesInSurveys: 0,
-          occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0, rank: 0})),
+          occurrencesInSurveysTitles: [],
+          occurrencesOverTime: range(minYear, maxYear + 1).map(year => ({year, occurrences: 0, occurrencesTitles: []})),
           averageTrendStrength: 0
         };
         return stat;
@@ -55,15 +58,19 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
       
       if (paddedTitle.includes(paddedKeyword)) {
         keyword.totalOccurrences += 1;
+        keyword.totalOccurrencesTitles.push(paperData.originalTitle)
+        
         
         if (paperData.processedTitle.includes('survey')) {
           keyword.occurrencesInSurveys += 1;
+          keyword.occurrencesInSurveysTitles.push(paperData.originalTitle)
         }
         
         const keywordYearRecord = keyword.occurrencesOverTime.find(t => t.year === paperData.year);
         
         if (keywordYearRecord) {
           keywordYearRecord.occurrences += 1;
+          keywordYearRecord.occurrencesTitles.push(paperData.originalTitle)
         }
       }
     }
@@ -91,6 +98,7 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
     keywordStat.averageTrendStrength = year + (worksAfterBulk / 1000000);
   });
   
+  console.log("keywordStats", keywordStats);
   
   return keywordStats;
 };
@@ -98,7 +106,9 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
 export interface KeywordStats {
   keyword: string;
   totalOccurrences: number;
+  totalOccurrencesTitles: string[];
   occurrencesInSurveys: number;
-  occurrencesOverTime: Array<{ year: number, occurrences: number}>;
+  occurrencesInSurveysTitles: string[];
+  occurrencesOverTime: Array<{ year: number, occurrences: number, occurrencesTitles: string[]}>;
   averageTrendStrength: number;
 }
