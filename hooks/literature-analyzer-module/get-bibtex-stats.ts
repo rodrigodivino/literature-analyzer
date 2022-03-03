@@ -66,9 +66,8 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
     }
   }
   
-  
   const keywordStats = uniqueKeywordStats
-      .filter(keywordRecord => keywordRecord.totalOccurrences > 1)
+      .filter(keywordRecord => keywordRecord.totalOccurrences > Math.ceil(bibtex.length * 0.01))
       .sort((a,b) => descending(a.totalOccurrences, b.totalOccurrences))
   
   keywordStats.forEach(keywordStat => {
