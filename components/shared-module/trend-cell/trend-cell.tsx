@@ -40,7 +40,7 @@ const TrendCell: FunctionComponent<TrendCellTypes.Props> = (
       {
         highlightedData.filter(d => d.value !== 0).map((d, i) => {
           return <circle className={styles.highlightedMarker} key={i} cx={timeScale(d.time)} cy={valueScale(d.value)}
-                         r={2}/>;
+                         r={2}><title>{`Year: ${d.time}. Count: ${d.value}`}</title></circle>;
         })
       }
     </g>
