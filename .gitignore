@@ -12,7 +12,7 @@
 # next.js
 /.next/
 /.idea/
-/out/
+#/out/
 
 # production
 /build
