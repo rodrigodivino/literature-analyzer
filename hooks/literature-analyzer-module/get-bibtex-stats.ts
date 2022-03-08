@@ -9,7 +9,9 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
   ) as [number, number];
   
   const a = performance.now();
-  const bibtexData = bibtex.filter(paperEntry => paperEntry?.entryTags?.author)
+  const bibtexData = bibtex
+      .filter((paperEntry, i) => i === bibtex.findIndex(b => b.entryTags?.title === paperEntry?.entryTags?.title))
+      .filter(paperEntry => paperEntry?.entryTags?.author)
       .map(paperEntry => {
         const titleWords = ((paperEntry.entryTags?.title))
             .replace(/[\W_]+/g, " ")
