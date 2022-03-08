@@ -34,9 +34,8 @@ export const getBibtexStats = (bibtex: ParsedBibtex[]): KeywordStats[] => {
   
   const allKeywordStats: KeywordStats[] = bibtexData.flatMap(paperData => {
     return paperData.titleWords.flatMap((word, i) => {
-      return range(0, 5).flatMap(n => {
+      return range(0, 3).flatMap(n => {
         const keyword = paperData.titleWords.slice(i, i + 1 + n).join(' ')
-        console.log("keyword", keyword);
         const stat: KeywordStats = {
           keyword,
           totalOccurrences: 0,
