@@ -53,10 +53,10 @@ The values are plotted in a table and can be sorted by each column.
 
 Hovering a bar will show some titles associated with the count: 
 
-![img.png](docs/title tooltip.png)
+![img.png](docs/title-tooltip.png)
 
 Hovering a dot in the line shows the year and count: 
 
-![img.png](docs/year tooltip.png)
+![img.png](docs/year-tooltip.png)
 
 
