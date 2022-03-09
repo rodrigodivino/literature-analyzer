@@ -24,7 +24,7 @@ Users can gather BibTeX using their favourite bibliographic management tool.
 
 The application uses only the titles of the papers for keyword detection. 
 
-After removing stop words (e.g., "of", "the") and move all words to lower case,
+After removing stop words (e.g., "of", "the") and moving all words to lower case,
 the application creates the unigrams, bigrams, and trigrams of each title.
 
 For example the title ```Literature Analyzer Application``` produces the following candidate keywords: 
@@ -33,13 +33,15 @@ For example the title ```Literature Analyzer Application``` produces the followi
 and ```Literature Analyzer Application``` (the trigram).
 
 
-The n-grams that appears in more than 1% of titles become keywords.
+The n-grams that appear in more than 1% of titles become keywords.
 The full set of unique keywords are then counted against each title to compute occurrence statistics.
 
 If a keyword is found in a title, the associated sub-keywords are not counted.
 For example, if a body of papers produces both "Deep Learning" and "Learning" as keywords,
 a paper "Deep Learning Technique" will count only towards the longest keyword (in this case, "Deep Learning"),
 and will not count towards sub-keywords (in this case, "Learning").
+
+Counting keywords produces the following data:
 
 - **Occurrences:** How many titles contain the keyword.
 - **Occurrences in Surveys:** How many titles contain both the keyword and the term "Survey".
@@ -51,7 +53,7 @@ The values are plotted in a table and can be sorted by each column.
 
 ![Partial](docs/partial.png)
 
-Hovering a bar will show some titles associated with the count: 
+And hovering a bar will show some titles associated with the count: 
 
 ![img.png](docs/title-tooltip.png)
 
