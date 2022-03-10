@@ -82,7 +82,10 @@ const Demo: NextPage = () => {
         
         <footer className={styles.footer}>
           <hr/>
-          <b>App by:</b> Rodrigo Divino.
+          <div className={styles.attributionLine}>
+            <span>Rodrigo Divino, 2022.</span>
+            <span>Application and Source Code released under the <a href='https://opensource.org/licenses/MIT'>MIT license</a>.</span>
+          </div>
         </footer>
       </div>
   );

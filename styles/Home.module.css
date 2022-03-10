@@ -25,6 +25,12 @@
     color: #515151;
 }
 
+.attributionLine {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
 .footer hr {
     border: 0;
     border-top: 1px solid #DEDEDE;
